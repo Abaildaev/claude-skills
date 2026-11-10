@@ -37,7 +37,9 @@
 
     // Buttons that open the Telegram bot directly
     $all('a[data-bot]').forEach(function (a) {
-      a.href = BOT_URL;
+      if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
+        a.href = BOT_URL;
+      }
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
     });
@@ -68,10 +70,10 @@
           stickyBtn.rel = 'noopener noreferrer';
           stickyBtn.textContent = 'Забрать в @ernurdev_bot ↗';
         } else {
-          stickyBtn.href = '#access';
+          stickyBtn.href = '#kits';
           stickyBtn.removeAttribute('target');
           stickyBtn.removeAttribute('rel');
-          stickyBtn.textContent = 'Забрать 60+ навыков ↓';
+          stickyBtn.textContent = 'Выбрать комплект ↓';
         }
       }
     }
@@ -85,11 +87,13 @@
     stickyBar();
 
     document.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href="#access"]');
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
       if (!a) return;
-      e.preventDefault();
-      var target = document.querySelector('#access');
+      var hash = a.getAttribute('href');
+      if (!hash || hash === '#') return;
+      var target = document.querySelector(hash);
       if (target) {
+        e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth' });
       }
     });
@@ -122,6 +126,18 @@
         '2. Одометр: анимированный счетчик километров с ускорением от 0 до 8 200 км.',
         '3. Пин геолокации и карточка направления в безопасной зоне Instagram Reels.',
         '4. Рендер MP4 завершен (1080x1920, 60fps). Экспортировать в проект?'
+      ]
+    },
+    trader: {
+      prompt: 'Проанализируй сетап BTC/USDT 15m: есть ли снятие ликвидности и валидный ордерблок?',
+      skill: 'smc-hunter', pack: 'Трейдинг и Аналитика',
+      reply: [
+        'Сканирование SMC-структуры (M15 / H1):',
+        '1. Снятие ликвидности: азиатский хай (BSL) пробит импульсной тенью свипа.',
+        '2. Слом структуры: подтвержден сдвиг MSS / CHoCH на 68 450$ с заломом тела свичи.',
+        '3. Зона интереса (POI): сформирован 15m медвежий ордерблок + незакрытый Imbalance (FVG).',
+        '4. Риск-менеджмент: вход 68 320$, SL 68 580$ (260п), TP 67 400$ (920п). Соотношение R:R = 1:3.5.',
+        'Симуляция Монте-Карло: математическое ожидание сетапа +1.84R при винрейте 52%.'
       ]
     },
     yt: {
