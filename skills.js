@@ -1,12 +1,14 @@
 /* ===========================================================================
    skills.js — Коллекция 60+ экспертных навыков для Claude Code
    Автор: Ернур Абайлдаев (Botflow)
-   Telegram: @ernur_dev / https://t.me/ernur_dev
+   Telegram-бот выдачи: @ernurdev_bot (https://t.me/ernurdev_bot?start=skills)
+   Telegram-канал: @ernur_dev (https://t.me/ernur_dev)
    =========================================================================== */
 (function () {
   'use strict';
 
-  var TG_URL = 'https://t.me/ernur_dev';
+  var BOT_URL = 'https://t.me/ernurdev_bot?start=skills';
+  var TG_CHANNEL = 'https://t.me/ernur_dev';
   var SKILLS = 66;
 
   function $all(sel) { return [].slice.call(document.querySelectorAll(sel)); }
@@ -33,8 +35,9 @@
     $all('[data-live-only]').forEach(function (el) { el.hidden = false; });
     $all('[data-ended-only]').forEach(function (el) { el.hidden = true; });
 
-    $all('a[data-buy]').forEach(function (a) {
-      a.href = TG_URL;
+    // Buttons that open the Telegram bot directly
+    $all('a[data-bot]').forEach(function (a) {
+      a.href = BOT_URL;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
     });
@@ -43,27 +46,39 @@
   function stickyBar() {
     var bar = document.querySelector('[data-sticky]');
     var hero = document.querySelector('[data-buy="hero"]');
-    var close = document.querySelector('.sk-close');
+    var access = document.querySelector('#access');
+    var stickyBtn = bar ? bar.querySelector('.rs-btn') : null;
     if (!bar || !hero) return;
     bar.hidden = false;
     var on = false;
     function update() {
       var vh = window.innerHeight;
-      var past = hero.getBoundingClientRect().bottom < 0;
-      var atClose = close && close.getBoundingClientRect().top < vh * 0.9;
-      var want = past && !atClose;
-      if (want !== on) { on = want; bar.classList.toggle('is-on', on); }
+      var pastHero = hero.getBoundingClientRect().bottom < 0;
+      var pastAccess = access && access.getBoundingClientRect().top < vh * 0.5;
+      
+      if (pastHero !== on) {
+        on = pastHero;
+        bar.classList.toggle('is-on', on);
+      }
+
+      if (stickyBtn) {
+        if (pastAccess) {
+          stickyBtn.href = BOT_URL;
+          stickyBtn.target = '_blank';
+          stickyBtn.rel = 'noopener noreferrer';
+          stickyBtn.textContent = 'Забрать в @ernurdev_bot ↗';
+        } else {
+          stickyBtn.href = '#access';
+          stickyBtn.removeAttribute('target');
+          stickyBtn.removeAttribute('rel');
+          stickyBtn.textContent = 'Забрать 60+ навыков ↓';
+        }
+      }
     }
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update, { passive: true });
     update();
   }
-
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[data-buy]');
-    if (!a) return;
-    a.href = TG_URL;
-  });
 
   function boot() {
     paint();
@@ -266,7 +281,7 @@
       var job = JOBS[order[n++ % order.length]];
       await c.clear(t, !first);
       await c.wait(first ? 350 : 500, t);
-      await c.type('git clone https://github.com/Abaildaev/claude-500-skills.git ~/.claude/skills/', t);
+      await c.type('git clone https://github.com/Abaildaev/claude-skills.git ~/.claude/skills/', t);
       await c.wait(450, t);
       var a = c.turn();
       await c.say(a, "Это коллекция 60+ экспертных навыков Claude от Ернура Абайлдаева (Botflow). Начинаю установку.", t);
