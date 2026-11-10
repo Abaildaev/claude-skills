@@ -307,11 +307,11 @@
       var job = JOBS[order[n++ % order.length]];
       await c.clear(t, !first);
       await c.wait(first ? 350 : 500, t);
-      await c.type('git clone https://github.com/Abaildaev/claude-skills.git ~/.claude/skills/', t);
+      await c.type('Установи пакет навыков Ернура Абайлдаева', t);
       await c.wait(450, t);
       var a = c.turn();
       await c.say(a, "Это коллекция 60+ экспертных навыков Claude от Ернура Абайлдаева (Botflow). Начинаю установку.", t);
-      await c.tool(a, 'Клонирую открытый репозиторий', 'Репозиторий подключен', 700, t);
+      await c.tool(a, 'Подключаю пакет навыков', 'Пакет подключен', 700, t);
       await c.tool(a, 'Устанавливаю навыки', 'Установлено 66 навыков', 1200, t, { count: 66 });
       await c.wait(300, t);
       var opts = c.ask(a, 'Какие категории активировать?', [
