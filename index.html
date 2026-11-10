@@ -21,7 +21,12 @@
 <meta name="twitter:image" content="./og.png">
 <link rel="icon" href="./favicon.ico">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<script>document.documentElement.classList.add('sk-js')</script>
+<script>
+document.documentElement.classList.add('sk-js');
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+if (window.location.hash) { history.replaceState(null, '', window.location.pathname + window.location.search); }
+window.scrollTo(0, 0);
+</script>
 <link rel="preload" href="./fonts/pixeboy.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./bare/base.css">
 <link rel="stylesheet" href="./bare/parts/button.css">
@@ -63,9 +68,9 @@
 <section class="sk-hero" aria-labelledby="sk-h1">
   <div class="sk-wrap sk-hero-in">
     <div class="sk-hero-copy">
-      <p class="sk-eyebrow">⚡️ ИНЖЕНЕРНЫЙ РЕГЛАМЕНТ ДЛЯ CLAUDE CODE · БЕСПЛАТНЫЙ OPEN-SOURCE СЕТАП</p>
-      <h1 class="sk-h1" id="sk-h1">Перестаньте писать промпты с нуля.<br>Превратите Claude в команду из <span class="sk-n">60+</span> экспертов за <span class="sk-n">1</span> команду</h1>
-      <p class="sk-lede">Монтаж видео и сочные 3D-анимации прямо из кода, сценарии для YouTube с удержанием 80%+, дожимы в B2B продажах и очеловечивание текстов без клише ChatGPT. Скопируйте одну строку в терминал — и заберите то, что другие настраивают месяцами.</p>
+      <p class="sk-eyebrow">✦ 60+ ЭКСПЕРТНЫХ НАВЫКОВ ДЛЯ CLAUDE CODE · 100% OPEN SOURCE</p>
+      <h1 class="sk-h1" id="sk-h1">Перестаньте писать промпты с нуля.<br>Превратите Claude в команду из <span class="sk-n">60+</span> экспертов</h1>
+      <p class="sk-lede">Монтаж видео и сочные 3D-анимации прямо из кода, сценарии для YouTube с удержанием 80%+ и дожимы в B2B продажах. Скопируйте одну строку в терминал — и заберите то, что другие настраивают месяцами.</p>
 
       <div class="sk-buybox" id="buy">
         <div class="sk-price">
@@ -389,7 +394,6 @@
   <div class="sk-wrap">
     <h2 class="sk-h2" id="sk-faq-h">Частые вопросы.</h2>
     <dl class="sk-qa">
-      <div><dt>Как именно получить навыки?</dt><dd>Нажмите кнопку на сайте и перейдите в официального Telegram-бота <a href="https://t.me/ernurdev_bot?start=skills" target="_blank" rel="noopener">@ernurdev_bot</a>. Нажмите «Запустить» (Start) — бот моментально выдаст готовую команду для терминала, архив и ссылку на онлайн-каталог со всеми регламентами.</dd></div>
       <div><dt>Это действительно бесплатно?</dt><dd>Да, на 100%. Все 66 регламентов собраны из лучших открытых MIT-репозиториев и упакованы для свободного использования без каких-либо оплат, тарифов или скрытых условий.</dd></div>
       <div><dt>Нужен ли навык программирования?</dt><dd>Нет, ни строчки кода писать не придётся. Вы просто копируете готовую команду клонирования и один раз вставляете её в терминал Claude Code. Дальше вы общаетесь с Claude обычным человеческим языком.</dd></div>
       <div><dt>Как работают навыки анимации и видеомонтажа?</dt><dd>Они используют открытые движки Three.js, GSAP, Playwright и FFmpeg прямо на вашем компьютере. Claude пишет спецификацию сцены, собирает кадры и локально рендерит готовое MP4 видео без сторонних платных сервисов.</dd></div>

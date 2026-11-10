@@ -83,6 +83,16 @@
   function boot() {
     paint();
     stickyBar();
+
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href="#access"]');
+      if (!a) return;
+      e.preventDefault();
+      var target = document.querySelector('#access');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
