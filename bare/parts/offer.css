@@ -1,0 +1,308 @@
+/* ===========================================================================
+   offer.css   the Skill Setup pop-up on every /r/<slug> page (offer.js)
+
+   v4: one compact card, read top to bottom in about two seconds.
+     indigo band   the outcome headline with "500" in the site's Pixeboy (the
+                   whole line is not pixel type: Pixeboy draws V like a U),
+                   then example-skill tags ending in "+497 more"
+     ink strip     the real launch countdown, ticking
+     paper         price, one button, two proof lines, dismiss
+   On a phone it is a bottom sheet that covers about half the screen.
+   Prefix of-. Tokens from base.css; the button is a stock .rs-btn.
+   =========================================================================== */
+
+html.of-lock { overflow: hidden; }
+
+.of[hidden], .of-pill[hidden], .of-clock[hidden] { display: none !important; }
+
+.of {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.of-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(30 27 22 / 0.5);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.of[data-state="open"] .of-scrim { opacity: 1; }
+
+.of-win {
+  position: relative;
+  width: min(440px, 100%);
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-float), 0 0 0 1px rgb(30 27 22 / 0.08);
+  outline: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 200ms ease, transform 280ms cubic-bezier(.16, 1, .3, 1);
+}
+.of[data-state="open"] .of-win { opacity: 1; transform: none; }
+
+.of-x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  color: #fff;
+  cursor: pointer;
+}
+.of-x:hover { background: rgb(255 255 255 / 0.24); }
+.of-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.of-x svg { width: 13px; height: 13px; }
+
+/* --- indigo band ------------------------------------------------------------------ */
+
+.of-top {
+  padding: 44px 26px 26px;
+  text-align: center;
+  color: #fff;
+  background-color: var(--indigo);
+  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  background-position: 7px 7px;
+}
+.of-h {
+  margin: 0 auto;
+  max-width: 360px;
+  font: 400 32px/1.12 var(--sans);
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.of-nw { white-space: nowrap; }
+
+/* example skills under the headline; the names must match real skills in the vault */
+.of-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 300px; /* two tags per row, so "+497 more" never sits alone */
+  margin: 18px auto 0;
+}
+.of-tags span {
+  padding: 6px 11px;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: var(--r-pill);
+  background: rgb(255 255 255 / 0.12);
+  font: 400 13px/1 var(--sans);
+  color: #fff;
+  white-space: nowrap;
+}
+.of-tags span:nth-child(1) { border-color: transparent; background: #C8F2D9; color: #0D4D2C; }
+.of-tags span:nth-child(2) { border-color: transparent; background: #FFE7A3; color: #5E4300; }
+.of-tags span:nth-child(3) { border-color: transparent; background: #FFD2E1; color: #74183F; }
+.of-tags .of-tags-more { border-color: rgb(255 255 255 / 0.55); background: transparent; color: #fff; }
+/* "500" and "ONE": the site's pixel display face (caps only), hard offset shadow like the resource heroes */
+.of-n {
+  display: inline-block;
+  margin: 0 0.04em;
+  font: 400 1.75em/0.7 var(--pixel);
+  letter-spacing: 0.02em;
+  text-shadow: 3px 3px 0 #2b2aa8;
+  vertical-align: -0.06em;
+}
+
+/* --- countdown strip --------------------------------------------------------------- */
+
+.of-clock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 11px 16px;
+  background: #1E1B16;
+  color: #EDE9DE;
+}
+.of-clock-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #CFC8B8;
+}
+.of-clock-k::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: #E8782E;
+  animation: of-blink 1s steps(1) infinite;
+}
+@keyframes of-blink { 50% { opacity: 0.2; } }
+.of-clock-v { display: flex; align-items: baseline; gap: 2px; }
+.of-clock-v b {
+  font: 400 26px/1 var(--pixel);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.of-clock-v i {
+  margin: 0 7px 0 1px;
+  font: 500 12px/1 var(--mono);
+  font-style: normal;
+  color: #CFC8B8;
+}
+.of-clock-v i:last-child { margin-right: 0; }
+
+/* --- price, button, proof ----------------------------------------------------------- */
+
+.of-bot {
+  padding: 22px 26px 10px;
+  text-align: center;
+}
+.of-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+.of-price b { font: 400 50px/1 var(--sans); letter-spacing: -0.03em; color: var(--ink); }
+.of-price s { font: 400 24px/1 var(--sans); color: var(--ink-2); text-decoration-thickness: 2px; }
+.of-price em {
+  align-self: center;
+  padding: 6px 10px;
+  border-radius: var(--r-pill);
+  background: #FBE3D2;
+  font: 500 13px/1 var(--sans);
+  font-style: normal;
+  color: #8A3B0B;
+}
+.of-price em[hidden] { display: none; }
+.of-bot .of-buy {
+  --btn-h: 56px;
+  width: 100%;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.of-proof {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  margin: 15px 0 4px;
+}
+.of-proof-r {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font: 400 14px/1.3 var(--sans);
+  color: var(--ink-2);
+}
+.of-proof-r b { font-weight: inherit; color: var(--ink); }
+.of-proof-r img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+.of-stars { display: inline-flex; gap: 1px; color: #E8782E; }
+.of-stars svg { width: 15px; height: 15px; }
+.of-skip {
+  display: block;
+  min-height: 40px;
+  margin: 0 auto;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  font: 400 14px/1 var(--sans);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.of-skip:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- the minimised pill ----------------------------------------------------------------- */
+
+.of-pill {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--indigo);
+  box-shadow: var(--shadow-card);
+  animation: of-pill-in 360ms cubic-bezier(.16, 1, .3, 1) both;
+}
+@keyframes of-pill-in { from { transform: translateY(14px); } }
+.of-pill-b {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: #fff;
+  font: 400 14px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.of-pill-b:hover { background: rgb(255 255 255 / 0.12); }
+.of-pill-n { font: 400 20px/1 var(--pixel); }
+.of-pill-b b { font-weight: 500; padding: 4px 8px; border-radius: var(--r-pill); background: #fff; color: var(--indigo); }
+.of-pill-x {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.of-pill-x:hover { background: rgb(255 255 255 / 0.14); }
+.of-pill-x svg { width: 10px; height: 10px; }
+
+/* --- phone: a half-height bottom sheet ------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .of { place-items: end stretch; padding: 0; }
+  .of-win {
+    width: 100%;
+    max-height: 90dvh;
+    border-radius: 18px 18px 0 0;
+    transform: translateY(100%);
+    transition: transform 300ms cubic-bezier(.16, 1, .3, 1), opacity 160ms ease;
+  }
+  .of-top { padding: 40px 16px 22px; }
+  .of-tags { gap: 5px; margin-top: 16px; max-width: 290px; }
+  .of-tags span { padding: 6px 9px; font-size: 12.5px; }
+  .of-h { font-size: 29px; }
+  .of-clock { gap: 10px; padding: 10px 12px; }
+  .of-clock-k { font-size: 10px; letter-spacing: 0.1em; }
+  .of-clock-v b { font-size: 24px; }
+  .of-bot { padding: 18px 18px calc(6px + env(safe-area-inset-bottom)); }
+  .of-price { margin-bottom: 14px; }
+  .of-price b { font-size: 46px; }
+  .of-pill { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .of-scrim, .of-win { transition: none; }
+  .of-win { transform: none; }
+  .of-pill, .of-clock-k::before { animation: none; }
+}

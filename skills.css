@@ -1,0 +1,916 @@
+/* ===========================================================================
+   skills.css   skills.opusjake.ai, the standalone sales page for Jake's
+   Ultimate Claude Skill Setup (same Stripe product as the /r/ pop-up)
+
+   Tokens, fonts and buttons come from /bare/base.css + /bare/parts/button.css,
+   so the page is a sibling of opusjake.ai and of the pop-up (offer.css): the
+   indigo dot band, Pixeboy for numbers, the ink countdown strip, the peach
+   savings tag. Prefix sk-.
+
+   v3 rhythm: indigo hero (a Claude chat that plays) / paper proof band /
+   paper demo (pick a job) / dark wall of all 500 names / paper steps / muted
+   GitHub posts / offer / plain two-column FAQ / indigo close. No section
+   labels, no grid of identical cards. Every animation's resting state is
+   visible without JS (hidden tabs never run rAF or observers).
+   =========================================================================== */
+
+/* base.css hides x-overflow on body, which kills position: sticky */
+body.sk-page { overflow-x: clip; }
+
+.sk-wrap {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+.sk-page [hidden] { display: none !important; }
+
+/* pixel numbers inside running text: Pixeboy draws half an em (caps only) */
+.sk-n {
+  display: inline-block;
+  margin: 0 0.04em;
+  font: 400 1.75em/0.7 var(--pixel);
+  letter-spacing: 0.02em;
+  vertical-align: -0.06em;
+}
+.sk-nw { white-space: nowrap; }
+
+.sk-blink {
+  display: inline-block;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: #E8782E;
+  animation: sk-blink 1s steps(1) infinite;
+}
+@keyframes sk-blink { 50% { opacity: 0.2; } }
+@keyframes sk-line { from { opacity: 0; transform: translateY(6px); } }
+@keyframes sk-spin { to { transform: rotate(360deg); } }
+
+/* --- header ------------------------------------------------------------------ */
+
+.sk-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(237 233 222 / 0.86);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  border-bottom: 1px solid var(--rule);
+}
+.sk-bar-in {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 60px;
+}
+.sk-brand {
+  font: 400 32px/1 var(--pixel);
+  letter-spacing: 0.04em;
+  color: var(--indigo);
+  text-decoration: none;
+}
+.sk-bar-clock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 0 auto;
+  font: 500 12px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.sk-bar-clock b { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+.sk-bar .sk-bar-buy { flex: none; }
+.sk-bar-clock[hidden] + .sk-bar-buy { margin-left: auto; }
+
+/* --- hero --------------------------------------------------------------------- */
+
+.sk-hero,
+.sk-close {
+  color: #fff;
+  background-color: var(--indigo);
+  background-image: radial-gradient(rgb(255 255 255 / 0.15) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+  background-position: 8px 8px;
+}
+.sk-hero { padding: 72px 0 88px; }
+.sk-hero-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
+}
+
+.sk-eyebrow {
+  margin: 0 0 18px;
+  font: 500 12px/1.2 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.74);
+}
+.sk-h1 {
+  max-width: 16.5ch;
+  margin: 0;
+  font: 400 clamp(38px, 5vw, 60px)/1.08 var(--sans);
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.sk-h1 .sk-n,
+.sk-close .sk-n { text-shadow: 3px 3px 0 #2b2aa8; }
+.sk-lede {
+  max-width: 44ch;
+  margin: 22px 0 30px;
+  font: 400 19px/1.5 var(--sans);
+  color: rgb(255 255 255 / 0.86);
+  text-wrap: pretty;
+}
+
+.sk-buybox {
+  max-width: 440px;
+  padding: 22px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.08);
+}
+
+.sk-price {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+.sk-price b { font: 400 52px/1 var(--sans); letter-spacing: -0.03em; color: #fff; }
+.sk-price s { font: 400 24px/1 var(--sans); color: rgb(255 255 255 / 0.62); text-decoration-thickness: 2px; }
+.sk-price em {
+  align-self: center;
+  padding: 6px 10px;
+  border-radius: var(--r-pill);
+  background: #FBE3D2;
+  font: 500 13px/1 var(--sans);
+  font-style: normal;
+  color: #8A3B0B;
+}
+.sk-price-ink b { color: var(--ink); }
+.sk-price-ink s { color: var(--ink-2); }
+
+.sk-page .sk-cta {
+  --btn-h: 56px;
+  width: 100%;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 500;
+}
+.sk-fine {
+  margin: 12px 0 0;
+  font: 400 13px/1.4 var(--sans);
+  text-align: center;
+  color: rgb(255 255 255 / 0.74);
+}
+
+.sk-clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--ground);
+  color: #EDE9DE;
+}
+.sk-clock-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #CFC8B8;
+}
+.sk-clock-v { display: flex; align-items: baseline; gap: 2px; }
+.sk-clock-v b {
+  font: 400 26px/1 var(--pixel);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.sk-clock-v i {
+  margin: 0 7px 0 1px;
+  font: 500 12px/1 var(--mono);
+  font-style: normal;
+  color: #CFC8B8;
+}
+.sk-clock-v i:last-child { margin-right: 0; }
+
+.sk-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 24px;
+}
+.sk-proof p {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font: 400 15px/1.3 var(--sans);
+  color: rgb(255 255 255 / 0.82);
+}
+.sk-proof b { font-weight: inherit; color: #fff; }
+.sk-proof img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.35);
+}
+.sk-stars { letter-spacing: 1px; color: #FFC94D; font-size: 15px; }
+
+/* --- the Claude app window: the light Claude desktop chat (cream ground, user
+   bubble, serif reply, quiet tool trail, the question card, composer). Never a
+   terminal: the buyers are not developers. skills.js plays it. ------------- */
+
+.sk-chat {
+  --cl-bg: #FAF9F5;
+  --cl-bar: #F0EEE6;
+  --cl-line: #E6E3D9;
+  --cl-ink: #141413;
+  --cl-mute: #73726C;
+  --cl-coral: #D97757;
+  --cl-sans: -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', sans-serif;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--cl-bg);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12), 0 2px 4px rgb(10 8 40 / 0.18), 0 32px 64px -16px rgb(10 8 40 / 0.5);
+  color: var(--cl-ink);
+  font: 400 14px/1.5 var(--cl-sans);
+}
+.sk-chat-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  background: var(--cl-bar);
+  border-bottom: 1px solid var(--cl-line);
+}
+.sk-chat-bar i { width: 11px; height: 11px; border-radius: 50%; background: #FF5F57; }
+.sk-chat-bar i:nth-child(2) { background: #FEBC2E; }
+.sk-chat-bar i:nth-child(3) { background: #28C840; }
+.sk-chat-bar span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cl-ink);
+  pointer-events: none;
+}
+.sk-chat-bar img { border-radius: 4px; }
+
+/* a real chat: it fills from the top, then scrolls as new lines arrive */
+.sk-chat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 22px 6px;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 48px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 48px);
+  transition: opacity 260ms ease;
+}
+.sk-chat-hero .sk-chat-body { height: 480px; }
+.sk-chat-demo .sk-chat-body { height: 460px; }
+.sk-chat-body.is-clearing { opacity: 0; }
+/* the hero's finished chat stays hidden until skills.js starts playing it, so
+   it doesn't flash; if the script never runs it shows after 2.5s */
+.sk-js .sk-chat-hero .sk-chat-body:not(.is-live) { animation: sk-hold 2.5s steps(1, end) both; }
+@keyframes sk-hold { from { opacity: 0; } to { opacity: 1; } }
+.sk-chat p { margin: 0; }
+.sk-chat-body > *,
+.sk-chat-turn > * { flex: none; }
+.sk-chat [data-new] { animation: sk-line 360ms cubic-bezier(.16, 1, .3, 1) both; }
+.sk-chat-me {
+  align-self: flex-end;
+  max-width: 88%;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: var(--cl-bar);
+  overflow-wrap: anywhere;
+}
+.sk-chat-ai { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; }
+.sk-chat-av { width: 24px; height: 24px; border-radius: 6px; }
+.sk-chat-turn {
+  display: grid;
+  gap: 10px;
+  font: 400 15px/1.55 ui-serif, Georgia, 'Times New Roman', serif;
+}
+.sk-chat-turn q { font-style: italic; }
+.sk-chat-out { display: grid; gap: 6px; }
+
+/* the tool trail: a spinner while busy, a green check when done, the coral
+   spark when Claude picks up a skill */
+.sk-chat-tool {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: 400 13px/1.3 var(--cl-sans);
+  color: var(--cl-mute);
+}
+.sk-chat-tool + .sk-chat-tool { margin-top: -6px; }
+.sk-chat-tool b { font-weight: 600; color: var(--cl-ink); }
+.sk-chat-tool i { flex: none; width: 12px; height: 12px; box-sizing: border-box; }
+.sk-chat-tool.is-busy i {
+  border-radius: 50%;
+  border: 1.5px solid #D5D2C8;
+  border-top-color: var(--cl-coral);
+  animation: sk-spin 700ms linear infinite;
+}
+.sk-chat-tool.is-done i {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.6l4.5-5.2' fill='none' stroke='%234A9B5C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+.sk-chat-tool.is-skill i {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 .8 7.2 4.8 11.2 6 7.2 7.2 6 11.2 4.8 7.2.8 6 4.8 4.8Z' fill='%23D97757'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+
+.sk-chat-ask {
+  margin: 2px 0;
+  padding: 12px 14px 8px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--cl-line), 0 1px 2px rgb(0 0 0 / 0.04);
+  font: 400 14px/1.3 var(--cl-sans);
+}
+.sk-chat .sk-chat-q { margin-bottom: 6px; font-weight: 600; }
+.sk-chat-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid #F0EEE6;
+}
+.sk-chat-opt b {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1.5px #C9C6BB;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+.sk-chat-opt.is-on b {
+  background: var(--cl-coral) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.6l4.5-5.2' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
+  box-shadow: none;
+}
+.sk-chat-opt em { margin-left: auto; font-style: normal; font-size: 13px; color: var(--cl-mute); }
+
+.sk-chat-compose {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 16px 16px;
+  padding: 10px 10px 10px 16px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--cl-line), 0 2px 6px rgb(0 0 0 / 0.04);
+  color: #9A988F;
+}
+.sk-chat-compose span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sk-chat-compose span.is-typed { color: var(--cl-ink); text-overflow: clip; }
+.sk-chat-compose span.is-typed::after {
+  content: "";
+  display: inline-block;
+  width: 1.5px;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: -0.15em;
+  background: var(--cl-ink);
+  animation: sk-blink 1s steps(1) infinite;
+}
+.sk-chat-compose b {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--cl-coral);
+  transition: transform 120ms ease;
+}
+.sk-chat-compose b.is-press { transform: scale(0.86); }
+.sk-chat-compose svg { width: 15px; height: 15px; }
+
+/* --- proof band: counters + the apps the skills cover ------------------------ */
+
+.sk-band { padding: 48px 0 44px; border-bottom: 1px solid var(--rule); }
+.sk-counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 760px;
+}
+.sk-counts p { display: grid; gap: 10px; align-content: start; margin: 0; }
+.sk-counts b {
+  font: 400 72px/0.7 var(--pixel);
+  letter-spacing: 0.02em;
+  color: var(--indigo);
+  font-variant-numeric: tabular-nums;
+}
+.sk-counts span { max-width: 24ch; font: 400 15px/1.4 var(--sans); color: var(--ink-2); }
+
+.sk-apps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 28px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--rule);
+}
+.sk-apps > p { margin: 0; font: 400 15px/1.3 var(--sans); color: var(--ink-2); }
+.sk-apps ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.sk-apps li {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--shadow-1), 0 0 0 1px rgb(47 43 37 / 0.06);
+  transition: transform 180ms cubic-bezier(.16, 1, .3, 1);
+}
+.sk-apps li img { width: 26px; height: 26px; object-fit: contain; }
+.sk-apps li span {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: var(--ground);
+  font: 400 12px/1 var(--sans);
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .sk-apps li:hover { transform: translateY(-3px); }
+  .sk-apps li:hover span { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* --- sections ----------------------------------------------------------------- */
+
+.sk-sec { padding-block: clamp(72px, 10vw, 120px); }
+.sk-h2 {
+  max-width: 22ch;
+  margin: 0;
+  font: 400 clamp(32px, 4vw, 48px)/1.1 var(--sans);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.sk-sub {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  font: 400 18px/1.55 var(--sans);
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* --- demo: pick a job, the Claude window answers with the matching skill ---- */
+
+.sk-demo-in {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 56px;
+  align-items: center;
+}
+.sk-demo .sk-chat { box-shadow: 0 0 0 1px rgb(47 43 37 / 0.08), var(--shadow-float); }
+.sk-jobs { display: grid; gap: 4px; margin-top: 32px; }
+.sk-job {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  font: 400 18px/1.2 var(--sans);
+  color: var(--ink-2);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.sk-job img { width: 22px; height: 22px; object-fit: contain; }
+.sk-job:hover { background: rgb(47 43 37 / 0.04); color: var(--ink); }
+.sk-job[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow-card); }
+.sk-job:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+/* while the demo cycles by itself, the selected job shows how long until the next */
+.sk-job::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--indigo);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.sk-jobs.is-auto .sk-job[aria-selected="true"]::after { animation: sk-progress var(--auto-ms, 9000ms) linear both; }
+@keyframes sk-progress { to { transform: scaleX(1); } }
+
+/* --- the wall: all 500 skill names drifting, or one pack laid out ----------- */
+
+.sk-wall {
+  padding-block: clamp(80px, 10vw, 128px);
+  background: var(--ground);
+  color: #EDE9DE;
+}
+.sk-wall .sk-h2 { color: #fff; }
+.sk-wall .sk-sub { color: #B9B2A3; }
+.sk-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 6px;
+  white-space: nowrap;
+  color: #EDE9DE;
+}
+.sk-key i {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: rgb(75 74 239 / 0.55);
+  box-shadow: inset 0 0 0 1px rgb(143 142 255 / 0.7);
+}
+.sk-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.sk-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  font: 400 14px/1 var(--sans);
+  color: #D9D3C5;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.sk-tab b { font-weight: 400; color: #8F897C; }
+.sk-tab:hover { background: rgb(255 255 255 / 0.12); color: #fff; }
+.sk-tab[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: none; }
+.sk-tab[aria-pressed="true"] b { color: var(--ink-2); }
+.sk-tab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.sk-wall-stage { margin-top: 40px; }
+.sk-rows {
+  display: grid;
+  gap: 10px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.sk-row { overflow: hidden; }
+.sk-track { display: flex; width: max-content; }
+/* the track holds its names twice (skills.js), so -50% lands on the seam */
+.sk-rows.is-moving .sk-track { animation: sk-marq var(--dur, 420s) linear infinite; }
+.sk-rows.is-moving .sk-row:nth-child(even) .sk-track { animation-direction: reverse; }
+.sk-row:nth-child(1) { --dur: 430s; }
+.sk-row:nth-child(2) { --dur: 380s; }
+.sk-row:nth-child(3) { --dur: 470s; }
+.sk-row:nth-child(4) { --dur: 400s; }
+.sk-row:nth-child(5) { --dur: 450s; }
+.sk-row:nth-child(6) { --dur: 390s; }
+@media (hover: hover) { .sk-rows:hover .sk-track { animation-play-state: paused; } }
+@keyframes sk-marq { to { transform: translateX(-50%); } }
+
+.sk-pill {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 38px;
+  margin-right: 10px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.05);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  font: 400 15px/1 var(--sans);
+  color: #D9D3C5;
+  white-space: nowrap;
+}
+.sk-pill.is-jake {
+  background: rgb(75 74 239 / 0.3);
+  box-shadow: inset 0 0 0 1px rgb(143 142 255 / 0.5);
+  color: #fff;
+}
+.sk-grid-cap { margin: 0 0 18px; font: 400 16px/1.4 var(--sans); color: #B9B2A3; }
+.sk-grid-cap b { font-weight: 400; color: #fff; }
+.sk-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.sk-grid .sk-pill {
+  margin: 0;
+  animation: sk-line 320ms cubic-bezier(.16, 1, .3, 1) both;
+  animation-delay: calc(var(--k, 0) * 9ms);
+}
+
+/* --- how it works: three small replicas of the real screens ---------------- */
+
+.sk-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 44px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sk-step h3 { margin: 22px 0 6px; font: 400 22px/1.2 var(--sans); color: var(--ink); }
+.sk-step p { margin: 0; font: 400 16px/1.5 var(--sans); color: var(--ink-2); }
+.sk-shot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 188px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+}
+.sk-shot p { margin: 0; }
+.sk-pay-row { display: flex; align-items: center; gap: 8px; font: 500 13px/1 var(--sans); color: var(--ink-2); }
+.sk-pay-row img { border-radius: 4px; }
+.sk-shot .sk-pay-name { margin-top: 14px; font: 400 14px/1.3 var(--sans); color: var(--ink-2); }
+.sk-shot .sk-pay-amt { margin-top: 2px; font: 400 30px/1.1 var(--sans); letter-spacing: -0.02em; color: var(--ink); }
+.sk-pay-btn {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  margin-top: 14px;
+  border-radius: 8px;
+  background: var(--ground);
+  font: 500 14px/1 var(--sans);
+  color: #fff;
+}
+.sk-shot .sk-mail-from { font: 400 12px/1.3 var(--sans); color: var(--ink-3); }
+.sk-shot .sk-mail-from b { font-weight: 500; color: var(--ink); margin-right: 4px; }
+.sk-shot .sk-mail-subj { margin-top: 6px; font: 500 17px/1.3 var(--sans); color: var(--ink); }
+.sk-shot .sk-mail-line {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--paper);
+  font: 400 12px/1.4 var(--mono);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.sk-shot-chat { gap: 14px; background: #FAF9F5; font: 400 13px/1.45 -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', sans-serif; color: #141413; }
+.sk-shot .sk-mini-me { align-self: flex-end; max-width: 92%; padding: 8px 12px; border-radius: 12px; background: #F0EEE6; overflow-wrap: anywhere; }
+.sk-shot .sk-mini-ai { display: flex; gap: 10px; font: 400 14px/1.5 ui-serif, Georgia, 'Times New Roman', serif; }
+.sk-mini-ai img { flex: none; border-radius: 5px; }
+
+/* --- people: real quotes from people using the skills (no links out) ------ */
+
+.sk-people { background: var(--muted); }
+.sk-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 0;
+  font: 400 16px/1 var(--sans);
+  color: var(--ink-2);
+}
+.sk-rating-stars { font-size: 20px; letter-spacing: 2px; color: #C08A2E; }
+.sk-ts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+.sk-t {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 0;
+  padding: 22px 20px 20px;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+.sk-t blockquote {
+  margin: 0;
+  font: 400 19px/1.4 var(--sans);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.sk-t blockquote::before { content: "\201C"; }
+.sk-t blockquote::after { content: "\201D"; }
+.sk-t figcaption { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+.sk-t figcaption img { flex: none; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.sk-t figcaption span { display: grid; gap: 2px; font: 400 13px/1.3 var(--sans); color: var(--ink-2); }
+.sk-t figcaption b { font-weight: 500; font-size: 15px; color: var(--ink); }
+
+/* --- offer ----------------------------------------------------------------- */
+
+.sk-offer-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+  padding: 44px;
+  border-radius: 24px;
+  background: var(--card);
+  box-shadow: var(--shadow-float);
+}
+.sk-gets { margin: 28px 0 0; }
+.sk-gets div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+}
+.sk-gets dt { font: 500 16px/1.4 var(--sans); color: var(--ink); }
+.sk-gets dd { margin: 0; font: 400 16px/1.4 var(--sans); color: var(--ink-2); }
+.sk-offer-r {
+  padding: 30px 28px;
+  border-radius: 18px;
+  background: var(--paper);
+}
+.sk-offer-r .sk-price { margin-bottom: 6px; }
+.sk-offer-r .sk-price b { font-size: 56px; }
+.sk-per { margin: 0 0 20px; font: 500 12px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+.sk-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  font: 400 13px/1 var(--sans);
+  color: var(--ink-2);
+}
+.sk-secure img { border-radius: 3px; }
+
+/* --- faq: plain question and answer, two columns, nothing to click ---------- */
+
+.sk-faq { padding-top: 0; }
+.sk-qa {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px 64px;
+  margin: 40px 0 0;
+}
+.sk-qa div { padding-top: 18px; border-top: 1px solid var(--rule); }
+.sk-qa dt { margin: 0 0 8px; font: 400 19px/1.35 var(--sans); color: var(--ink); }
+.sk-qa dd { margin: 0; font: 400 16px/1.55 var(--sans); color: var(--ink-2); }
+
+/* --- closing band ------------------------------------------------------------- */
+
+.sk-close { padding-block: clamp(80px, 11vw, 128px); text-align: center; }
+.sk-close-in { display: grid; justify-items: center; }
+.sk-close-h {
+  max-width: 16ch;
+  margin: 0;
+  font: 400 clamp(38px, 5.4vw, 64px)/1.06 var(--sans);
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.sk-close-in > p { margin: 18px 0 30px; font: 400 20px/1.4 var(--sans); color: rgb(255 255 255 / 0.86); }
+.sk-close-in .sk-cta { max-width: 400px; }
+.sk-close-in > .sk-close-fine { margin: 14px 0 0; font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: rgb(255 255 255 / 0.72); }
+
+/* --- footer ---------------------------------------------------------------------- */
+
+.sk-foot { padding: 32px 0 calc(32px + env(safe-area-inset-bottom)); }
+.sk-foot-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; }
+.sk-foot nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.sk-foot nav a { font: 400 14px/1 var(--sans); color: var(--ink-2); text-decoration: none; }
+.sk-foot nav a:hover { color: var(--ink); }
+.sk-status { width: 100%; margin: 0; font: 500 11px/1.4 var(--mono); letter-spacing: 0.12em; color: var(--ink-3); }
+
+/* phone buy bar, shown once the hero's button has scrolled away */
+.sk-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: rgb(245 242 234 / 0.94);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: 0 -1px 0 var(--rule), 0 -12px 28px -12px rgb(31 29 58 / 0.24);
+  transform: translateY(110%);
+  transition: transform 260ms cubic-bezier(.16, 1, .3, 1);
+}
+.sk-sticky.is-on { transform: none; }
+.sk-sticky-p { display: flex; align-items: baseline; gap: 6px; flex: none; }
+.sk-sticky-p b { font: 400 24px/1 var(--sans); letter-spacing: -0.02em; color: var(--ink); }
+.sk-sticky-p s { font: 400 15px/1 var(--sans); color: var(--ink-2); }
+.sk-sticky .rs-btn { --btn-h: 48px; flex: 1; border-radius: 12px; font-size: 16px; }
+
+/* --- responsive ------------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .sk-hero { padding: 48px 0 64px; }
+  .sk-hero-in { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .sk-chat-hero { max-width: 600px; }
+  .sk-demo-in { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .sk-chat-demo { max-width: 640px; }
+  .sk-offer-card { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 32px; }
+}
+
+@media (max-width: 900px) {
+  .sk-sticky { display: flex; }
+  body.sk-page { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 760px) {
+  .sk-steps { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .sk-counts { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .sk-counts p { grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 14px; }
+  .sk-counts b { font-size: 50px; }
+  .sk-qa { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .sk-ts { grid-template-columns: minmax(0, 1fr); }
+  /* the job list becomes a row of chips that scrolls sideways */
+  .sk-jobs {
+    display: flex;
+    gap: 8px;
+    margin: 24px -16px 0;
+    padding: 4px 16px 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sk-jobs::-webkit-scrollbar { display: none; }
+  .sk-job { flex: none; gap: 9px; padding: 10px 14px; font-size: 15px; background: var(--card); box-shadow: inset 0 0 0 1px var(--rule); }
+  .sk-job[aria-selected="true"] { background: var(--ink); color: #fff; box-shadow: none; }
+  .sk-job img { width: 18px; height: 18px; }
+  .sk-job::after { left: 12px; right: 12px; bottom: 3px; background: #fff; }
+  /* the pack tabs scroll sideways too */
+  .sk-tabs {
+    flex-wrap: nowrap;
+    margin-inline: -16px;
+    padding: 2px 16px 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sk-tabs::-webkit-scrollbar { display: none; }
+  .sk-tab { flex: none; }
+}
+
+@media (max-width: 560px) {
+  .sk-wrap { padding-inline: 16px; }
+  .sk-bar-in { gap: 12px; height: 56px; }
+  .sk-bar .sk-bar-buy { display: none; }
+  .sk-bar-clock > span:not(.sk-blink) { display: none; }
+  .sk-hero { padding: 36px 0 48px; }
+  .sk-eyebrow { font-size: 11px; margin-bottom: 14px; }
+  .sk-h1 { font-size: clamp(28px, 8.2vw, 36px); line-height: 1.15; }
+  .sk-lede { font-size: 17px; margin: 16px 0 22px; }
+  .sk-buybox { padding: 18px; }
+  .sk-price b { font-size: 46px; }
+  .sk-chat-body { padding: 18px 14px 4px; gap: 14px; }
+  .sk-chat-hero .sk-chat-body { height: 430px; }
+  .sk-chat-demo .sk-chat-body { height: 420px; }
+  .sk-chat-turn { font-size: 14.5px; }
+  .sk-chat-compose { margin: 12px; }
+  .sk-apps { gap: 14px; }
+  .sk-apps ul { gap: 8px; }
+  .sk-apps li { width: 42px; height: 42px; border-radius: 10px; }
+  .sk-apps li img { width: 22px; height: 22px; }
+  .sk-pill { height: 34px; padding: 0 12px; font-size: 14px; margin-right: 8px; }
+  .sk-rows { gap: 8px; }
+  .sk-offer-card { padding: 22px 18px; border-radius: 20px; }
+  .sk-offer-r { padding: 22px 18px; }
+  .sk-gets div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-chat [data-new], .sk-grid .sk-pill { animation: none; }
+  .sk-blink, .sk-chat-compose span.is-typed::after, .sk-chat-tool.is-busy i { animation: none; }
+  .sk-rows.is-moving .sk-track { animation: none; }
+  .sk-jobs.is-auto .sk-job[aria-selected="true"]::after { animation: none; }
+  .sk-sticky { transition: none; }
+}

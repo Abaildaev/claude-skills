@@ -1,0 +1,319 @@
+/* ===========================================================================
+   button.css   every button on the site, as Astryx 0.6.7 draws its Button
+
+   Replaces gel.css (the Aqua gloss pills). The values are not eyeballed: they
+   were read off a real @astryxdesign/core 0.6.7 <Button>, rendered in the
+   OpusJake theme from opusjake-landing (the Bare mockups were built on
+   Astryx), at rest, under hover, under a press and under keyboard focus.
+
+     height        sm 28 · md 32 · lg 36 (--size-element-*); the hero pair is
+                   lg scaled whole by 4/3 (48)
+     shape         10px radius (--radius-element), no border, no shadow
+     label         14px / 20px, weight 500, 8px gap to an icon, 12px inline pad
+     primary       #4b4aef, white label (--color-accent / --color-on-accent)
+     secondary     6% ink tint, ink label (--color-neutral)
+     ghost         transparent, ink label
+     hover         a 5% ink layer over the fill, only where hover exists
+     press         a 10% layer and scale(0.98), 125ms, ease (0.24, 1, 0.4, 1)
+
+   One change from stock Astryx, at Jake's call: no focus ring. A button that
+   is pressed, or holds keyboard focus, is PUSHED IN instead: the 10% layer
+   plus an inset shadow falling from the top edge (the light on this site
+   comes from above), so the surface reads as below its surround. The nav's
+   current page wears the same well. Forced-colours mode drops box shadows,
+   so a real outline comes back there.
+     disabled      50% opacity, no hover, no press
+
+   Touch is Astryx's own press model, not :active. On a phone :active paints
+   the moment a finger lands and can outlive the start of a scroll, so under a
+   coarse pointer the press is written by press.js as data-press: "on" once
+   the touch is believed (150ms held, under 10px of travel, no scroll), a
+   100ms flash for a quick tap, then "fading" for the 200ms release.
+
+   Loaded after mobile.css and layout-polish.css, so it owns the SIZE as well
+   as the skin. The component sheets keep layout only (where a button sits);
+   every state rule a button has lives here and nowhere else.
+   =========================================================================== */
+
+/* the release fades a number, because gradients do not interpolate */
+@property --btn-press {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+:root {
+  --btn-h-sm: 28px;
+  --btn-h-md: 32px;
+  --btn-h-lg: 36px;
+  --btn-radius: 10px;
+  --btn-accent: #4b4aef;
+  --btn-neutral: rgb(0 0 0 / 0.06);
+  --btn-hover: rgb(0 0 0 / 0.05);
+  --btn-pressed: rgb(0 0 0 / 0.1);
+  /* pushed in: a soft dark lip under the top edge, a 1px light one at the foot */
+  --btn-inset: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+  /* at rest a filled button sits ON the page: a contact shadow under it and a
+     1px line of light along its top edge, the macOS push button's depth */
+  --btn-shadow: var(--shadow-1), inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --btn-fast: 125ms;
+  --btn-ease: cubic-bezier(0.24, 1, 0.4, 1);
+}
+
+/* --- shape: every button ---------------------------------------------------- */
+
+.hr-actions .hr-btn,
+.rs-btn,
+.fg-copy .fg-act,
+.ft .ft-pill,
+.nv-nav .nv-link,
+.bk .bk-go,
+.bk .bk-close,
+.lbm .lbm-close,
+.cm-send,
+.library .sort-submit,
+.nv-nav .nv-menu-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--btn-h, var(--btn-h-md));
+  /* never shorter than its size: a column flex parent would otherwise squeeze
+     it (min-height 0 collapsed the Lab card's button to 7px) */
+  min-height: var(--btn-h, var(--btn-h-md));
+  /* but free to narrow, so a long label truncates instead of overflowing */
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--btn-radius);
+  font: 500 14px/20px var(--sans, 'Endless', system-ui, sans-serif);
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: none;
+  background-image: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transform: scale(1);
+  transition-property: background-image, background-color, color, opacity, transform, box-shadow;
+  transition-duration: var(--btn-fast);
+  transition-timing-function: var(--btn-ease);
+}
+
+/* --- size: page actions are large, chrome is medium -------------------------- */
+
+.fg-copy .fg-act,
+.ft .ft-pill,
+.bk .bk-go { --btn-h: var(--btn-h-lg); }
+
+/* The hero pair is the page's first decision, so it is bigger, but it is the
+   SAME SHAPE as every other button (the library's pair is the reference): the
+   lg button scaled whole, not stretched. Height, corner, padding, gap and
+   label all grow by one factor, --btn-k, in px per lg px. Raising the height
+   alone (48px with lg's 10px corner and a 16px label) read as squarer and
+   emptier than the library's buttons; Jake caught it.
+
+   4/3 on desktop: 48 tall, 13.3 corner, 16 padding, 16 label. On a phone the
+   factor gives way before the pair would wrap: the widest pair (Opus Lab's,
+   252 lg px with padding) plus the 12px gap must fit inside the 16px gutters,
+   so k = (100vw - 44px) / 252, capped at 4/3. That is 4/3 from 380px up and
+   about 47px tall at 375. Below 44px tall, the touch area still is 44. */
+.hr-actions .hr-btn {
+  --btn-k: 1.3333px;
+  --btn-h: calc(36 * var(--btn-k));
+  padding-inline: calc(12 * var(--btn-k));
+  gap: calc(8 * var(--btn-k));
+  border-radius: calc(10 * var(--btn-k));
+  /* the label does not scale with the rest: at 4/3 it ran 18.7px and read
+     loud for a button (Jake). 12 lg px of label is 16px on desktop. */
+  font-size: calc(12 * var(--btn-k));
+  line-height: calc(20 * var(--btn-k));
+}
+/* On a phone the pair is the lg button itself, the same size as the card
+   buttons and the footer's (Jake, Oct 10: "the same size as the rest of the
+   buttons"); the 4/3 scale is a desktop thing. */
+@media (max-width: 720px) {
+  .hr-actions .hr-btn { --btn-k: 1px; font-size: 14px; line-height: 20px; }   /* lg's own label, not the scaled 12 */
+}
+/* the resource pages (/r/<slug>): page actions are lg, a code block's Copy is sm */
+.rs-btn { --btn-h: var(--btn-h-lg); }
+.rs-btn.rs-btn-sm { --btn-h: var(--btn-h-sm); padding: 0 10px; font-size: 13px; line-height: 20px; }
+/* the library's search pair is the lg button itself */
+.library .hr-actions .hr-btn { --btn-k: 1px; }
+.library .sort-submit { --btn-h: var(--btn-h-sm); }
+
+/* the send button is Astryx's ChatSendButton: an icon-only md primary, round */
+.cm-send { width: var(--btn-h-md); padding: 0; border-radius: 50%; flex: none; }
+.cm-send::after { content: none; }
+.cm-send svg { width: 16px; height: 16px; filter: none; }
+
+/* --- variants ------------------------------------------------------------- */
+
+.hr-actions .hr-btn-solid,
+.rs-btn-primary,
+.nv-nav .nv-link-cta,
+.bk .bk-go,
+.cm-send {
+  background-color: var(--btn-accent);
+  color: #fff;
+  box-shadow: var(--btn-shadow);
+}
+
+.hr-actions .hr-btn-soft,
+.rs-btn-secondary,
+.bk .bk-close,
+.lbm .lbm-close,
+.library .sort-submit {
+  background-color: var(--btn-neutral);
+  color: var(--ink, #2F2B25);
+  box-shadow: var(--btn-shadow);
+}
+
+/* the quiet nav items are Astryx's ghost: no fill until hovered */
+.nv-nav .nv-link:not(.nv-link-cta),
+.nv-nav .nv-menu-toggle {
+  background-color: transparent;
+  color: var(--ink, #2F2B25);
+}
+/* the header's one call to action is the primary, set a step apart from the
+   links it ends (the Astryx mockup's "Work with me") */
+.nv-nav .nv-link-cta { margin-left: var(--u); }
+/* the phone menu button: a ghost icon button, and PUSHED IN while its menu
+   is open, the site's sign for "on" */
+.nv-nav .nv-menu-toggle { width: var(--btn-h-md); padding: 0; flex: none; }
+.nv-nav .nv-menu-toggle[aria-expanded="true"],
+.nv-nav .nv-menu[open]:not(.nv-js) .nv-menu-toggle {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+}
+.nv-nav .nv-link[aria-current="page"] {
+  background-color: color-mix(in srgb, var(--btn-accent) 10%, transparent);
+  color: var(--btn-accent);
+  box-shadow: var(--btn-inset);
+}
+
+/* On blue (the gradient cards, the footer's skyline band) the button is the
+   one light object: a white fill with a deep indigo label, the colours the card
+   buttons had before the gel. A flat indigo button on an indigo band has no
+   edge. */
+.fg-copy .fg-act,
+.rs-btn-onblue,
+.ft .ft-pill {
+  background-color: #fff;
+  color: #2438C8;
+  box-shadow: var(--btn-shadow);
+}
+/* on a phone the card's words sit on paper, so its button is the primary */
+@media (max-width: 899px) {
+  .fg-copy .fg-act { background-color: var(--btn-accent); color: #fff; }
+}
+
+/* --- states ----------------------------------------------------------------- */
+
+/* keyboard focus: pushed in, no ring */
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus {
+  outline: none;
+}
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus-visible {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+}
+@media (forced-colors: active) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
+}
+
+@media (hover: hover) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):where(:not(:disabled, [aria-disabled="true"])):hover {
+    background-image: linear-gradient(var(--btn-hover), var(--btn-hover));
+  }
+}
+
+/* a mouse press */
+@media not (pointer: coarse) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):where(:not(:disabled, [aria-disabled="true"])):active {
+    background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+    box-shadow: var(--btn-inset);
+    transform: scale(0.98);
+  }
+}
+
+/* a finger press, written by press.js */
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)[data-press="on"] {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+  transform: scale(0.98);
+}
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)[data-press="fading"] {
+  background-image: linear-gradient(rgb(0 0 0 / calc(var(--btn-press) * 0.1)),
+                                    rgb(0 0 0 / calc(var(--btn-press) * 0.1)));
+  animation: btn-release 200ms ease-out forwards;
+}
+@keyframes btn-release { from { --btn-press: 1; } to { --btn-press: 0; } }
+
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):is(:disabled, [aria-disabled="true"]) {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+/* the empty composer: Astryx disables the send button rather than greying it */
+.cm-send[disabled] { color: #fff; background-color: var(--btn-accent); border: 0; }
+
+/* A finger needs 44px even where the button draws 28 to 36. The hit area
+   grows invisibly around the drawn shape; nothing in the layout moves. */
+@media (pointer: coarse) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle) {
+    transition-duration: 0s;
+  }
+}
+
+/* --- rows that act like buttons: the dialog's answers ----------------------- */
+
+/* Astryx's list rows answer a press with the same 10% layer and no scale. */
+@media not (pointer: coarse) {
+  .bk .bk-opt:active { background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed)); }
+}
+.bk .bk-opt[data-press="on"] { background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed)); }
+.bk .bk-opt[data-press="fading"] {
+  background-image: linear-gradient(rgb(0 0 0 / calc(var(--btn-press) * 0.1)),
+                                    rgb(0 0 0 / calc(var(--btn-press) * 0.1)));
+  animation: btn-release 200ms ease-out forwards;
+}

@@ -1,0 +1,33 @@
+{
+  "enabled": true,
+  "id": "skill-setup-v1",
+  "variant": "v5-no-tags",
+  "name": "500 навыков для Claude",
+  "hero": "Установите [500] профессиональных навыков Claude [одной] командой",
+  "endsLabel": "Скидка на старте сгорит через",
+  "price": 29,
+  "compareAt": 49,
+  "deadline": "2026-11-16T23:59:00-05:00",
+  "deadlineShort": "16 ноя",
+  "afterDeadline": {
+    "price": 49,
+    "checkoutUrl": "https://buy.stripe.com/fZu3cwg6IbM71to5VY3VC0e"
+  },
+  "cta": "Забрать все 500 навыков",
+  "proof": "26 000+ звёзд на GitHub",
+  "reviews": "1 000+ отзывов 5 звёзд",
+  "avatar": "./images/opusjake-avatar-160.jpg",
+  "dismiss": "Нет, спасибо",
+  "pill": "Навыки Claude",
+  "checkoutUrl": "https://buy.stripe.com/bJe5kE7Ac3fB8VQfwy3VC0d",
+  "simCheckoutUrl": "/vault/sim/checkout.html",
+  "trigger": {
+    "minSeconds": 1,
+    "seconds": 1.5,
+    "afterDownloadMs": 1000,
+    "exitIntent": true,
+    "cooldownDays": 3,
+    "searchVisitors": "download-or-exit"
+  },
+  "excludeSlugs": []
+}

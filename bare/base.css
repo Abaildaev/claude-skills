@@ -1,0 +1,131 @@
+/* ===========================================================================
+   base.css   the OpusJake brand layer for the single page
+
+   Three instructions from the client govern this file and everything built
+   on it: keep oatmeal and indigo, keep the current fonts, keep it simple.
+   So there is exactly ONE hue on this site, and exactly THREE typefaces.
+
+   The page moves through seven aesthetic modes. Because hue and typeface are
+   fixed, the modes separate through texture, value, density, shadow and
+   negative space instead. That constraint is the design, not a limitation
+   worked around.
+   =========================================================================== */
+
+@font-face { font-family: 'Inter Tight'; font-weight: 400; font-display: swap; src: url('../fonts/inter-latin-400-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+@font-face { font-family: 'Inter Tight'; font-weight: 400; font-display: swap; src: url('../fonts/inter-cyrillic-400-normal.woff2') format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Inter Tight'; font-weight: 500; font-display: swap; src: url('../fonts/inter-latin-500-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+@font-face { font-family: 'Inter Tight'; font-weight: 500; font-display: swap; src: url('../fonts/inter-cyrillic-500-normal.woff2') format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Inter Tight'; font-weight: 600; font-display: swap; src: url('../fonts/inter-latin-600-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+@font-face { font-family: 'Inter Tight'; font-weight: 600; font-display: swap; src: url('../fonts/inter-cyrillic-600-normal.woff2') format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Inter Tight'; font-weight: 700; font-display: swap; src: url('../fonts/inter-latin-700-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+@font-face { font-family: 'Inter Tight'; font-weight: 700; font-display: swap; src: url('../fonts/inter-cyrillic-700-normal.woff2') format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Tiny5'; src: url('../fonts/tiny5-cyrillic.woff2') format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; font-display: swap; }
+@font-face { font-family: 'Tiny5'; src: url('../fonts/tiny5-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F; font-display: swap; }
+@font-face { font-family: 'Endless'; src: url('../fonts/endless.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Pixeboy'; src: url('../fonts/pixeboy.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/JetBrainsMono-Medium.woff2') format('woff2'); font-weight: 500 600; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/JetBrainsMono-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  color-scheme: light;
+
+  --paper:   #EDE9DE;
+  --card:    #F5F2EA;
+  --muted:   #E4DFD1;
+  --ink:     #2F2B25;
+  --ink-2:   #6C6659;
+  --ink-3:   #A8A294;
+  --rule:    #2F2B2524;
+  --rule-2:  #CFC8B8;
+
+  /* the only hue on the site */
+  --indigo:  #4b4aef;
+
+  /* the inverted ground, used by the ledger mode alone */
+  --ground:  #1E1B16;
+
+  --sans:  'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --pixel: 'Pixeboy', 'Tiny5', ui-monospace, monospace;
+  --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  /* 8px grid. Every spacing value in this project is a multiple of --u. */
+  --u: 8px;
+
+  /* Radius is a scale with a job per step, not a preference. 0 is structure,
+     s is a small object, m is a panel, l is a large surface, pill is anything
+     pressable. See DESIGN.md. A value off this scale is a bug. */
+  --r-xs:   6px;
+  --r-s:    10px;
+  /* panels and large surfaces share one tight corner, 8px (Jake, Oct 2026,
+     pointing at openai.com's cards); controls keep Astryx's 10px */
+  --r-m:    8px;
+  --r-l:    8px;
+  --r-pill: 999px;
+
+  /* Two elevations. Paper does not float: a content card gets a hairline. */
+  --shadow-1: 0 1px 2px rgba(31, 29, 58, 0.14);
+  --shadow-2: 0 10px 24px rgba(31, 29, 58, 0.14);
+  /* the Apple pair: a tight contact shadow plus a wide, soft ambient one
+     (Oct 10: Jake asked for depth on the boxes and buttons, as in Apple's UI) */
+  --shadow-card: 0 1px 2px rgba(31, 29, 58, 0.08), 0 12px 28px -8px rgba(31, 29, 58, 0.24);
+  --shadow-float: 0 1px 2px rgba(31, 29, 58, 0.10), 0 24px 56px -12px rgba(31, 29, 58, 0.34);
+
+  /* section rhythm, 120px to 200px */
+  --section-y: clamp(120px, 14vh, 200px);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+html, body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { overflow-x: hidden; }
+
+a { color: var(--indigo); }
+
+/* the contained column. Full bleed sections opt out by not using it. */
+.wrap {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+/* shared type helpers. Sections may use these but must not restyle them. */
+.mono-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.wordmark-pixel {
+  font-family: var(--pixel);
+  font-weight: 400;
+  color: var(--indigo);
+  letter-spacing: 0.04em;
+  /* Pixeboy digits and caps sit ON the baseline and are exactly half an em
+     tall, so a 100px font-size draws 50px of ink. Author by visible height
+     and derive the size, never by eyeballing line-height. */
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
