@@ -24,8 +24,19 @@
 <script>
 document.documentElement.classList.add('sk-js');
 if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-if (window.location.hash) { history.replaceState(null, '', window.location.pathname + window.location.search); }
+if (window.location.hash) {
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+}
 window.scrollTo(0, 0);
+window.addEventListener('DOMContentLoaded', function () {
+  window.scrollTo(0, 0);
+});
+window.addEventListener('load', function () {
+  window.scrollTo(0, 0);
+});
+setTimeout(function () {
+  window.scrollTo(0, 0);
+}, 50);
 </script>
 <link rel="preload" href="./fonts/pixeboy.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./bare/base.css">
@@ -509,7 +520,7 @@ window.scrollTo(0, 0);
 </section>
 
 <!-- ACCESS / OFFER: Instant Telegram Bot Access ---------------------------- -->
-<section class="sk-sec sk-offer" id="access" aria-labelledby="sk-offer-h">
+<section class="sk-sec sk-offer" id="offer" aria-labelledby="sk-offer-h">
   <div class="sk-wrap">
     <div class="sk-offer-card">
       <div class="sk-offer-l">

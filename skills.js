@@ -48,7 +48,7 @@
   function stickyBar() {
     var bar = document.querySelector('[data-sticky]');
     var hero = document.querySelector('[data-buy="hero"]');
-    var access = document.querySelector('#access');
+    var offer = document.querySelector('#offer');
     var stickyBtn = bar ? bar.querySelector('.rs-btn') : null;
     if (!bar || !hero) return;
     bar.hidden = false;
@@ -56,7 +56,7 @@
     function update() {
       var vh = window.innerHeight;
       var pastHero = hero.getBoundingClientRect().bottom < 0;
-      var pastAccess = access && access.getBoundingClientRect().top < vh * 0.5;
+      var pastOffer = offer && offer.getBoundingClientRect().top < vh * 0.5;
       
       if (pastHero !== on) {
         on = pastHero;
@@ -64,7 +64,7 @@
       }
 
       if (stickyBtn) {
-        if (pastAccess) {
+        if (pastOffer) {
           stickyBtn.href = BOT_URL;
           stickyBtn.target = '_blank';
           stickyBtn.rel = 'noopener noreferrer';
