@@ -128,25 +128,25 @@ body.sk-page {
   background-size: 16px 16px;
   background-position: 8px 8px;
 }
-.sk-hero { padding: clamp(40px, 5vh, 60px) 0 clamp(44px, 6vh, 68px); }
+.sk-hero { padding: 72px 0 88px; }
 .sk-hero-in {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: clamp(32px, 3.5vw, 52px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 56px;
   align-items: center;
 }
 
 .sk-eyebrow {
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   font: 500 12px/1.2 var(--mono);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgb(255 255 255 / 0.74);
 }
 .sk-h1 {
-  max-width: 30ch;
+  max-width: 20ch;
   margin: 0;
-  font: 700 clamp(32px, 3.2vw, 44px)/1.18 var(--sans);
+  font: 400 clamp(38px, 5vw, 60px)/1.08 var(--sans);
   letter-spacing: -0.02em;
   color: #fff;
   text-wrap: balance;
@@ -154,16 +154,16 @@ body.sk-page {
 .sk-h1 .sk-n,
 .sk-close .sk-n { text-shadow: 3px 3px 0 #2b2aa8; }
 .sk-lede {
-  max-width: 52ch;
-  margin: 16px 0 24px;
-  font: 400 clamp(15px, 1.2vw, 17px)/1.5 var(--sans);
-  color: rgb(255 255 255 / 0.88);
+  max-width: 44ch;
+  margin: 22px 0 30px;
+  font: 400 19px/1.5 var(--sans);
+  color: rgb(255 255 255 / 0.86);
   text-wrap: pretty;
 }
 
 .sk-buybox {
   max-width: 440px;
-  padding: 18px 20px;
+  padding: 22px;
   border: 1px solid rgb(255 255 255 / 0.2);
   border-radius: 18px;
   background: rgb(255 255 255 / 0.08);
@@ -327,7 +327,7 @@ body.sk-page {
   mask-image: linear-gradient(to bottom, transparent 0, #000 48px);
   transition: opacity 260ms ease;
 }
-.sk-chat-hero .sk-chat-body { height: clamp(340px, 42vh, 410px); }
+.sk-chat-hero .sk-chat-body { height: 480px; }
 .sk-chat-demo .sk-chat-body { height: 460px; }
 .sk-chat-body.is-clearing { opacity: 0; }
 /* the hero's finished chat stays hidden until skills.js starts playing it, so
@@ -932,8 +932,8 @@ body.sk-page {
   .sk-bar-clock > span:not(.sk-blink) { display: none; }
   .sk-hero { padding: 36px 0 48px; }
   .sk-eyebrow { font-size: 11px; margin-bottom: 14px; }
-  .sk-h1 { max-width: 100%; font-size: clamp(20px, 5.6vw, 26px); line-height: 1.26; overflow-wrap: normal; word-break: normal; }
-  .sk-lede { font-size: 16px; margin: 16px 0 22px; max-width: 100%; }
+  .sk-h1 { max-width: 100%; font-size: clamp(30px, 9vw, 40px); line-height: 1.1; }
+  .sk-lede { font-size: 17px; margin: 16px 0 22px; max-width: 100%; }
   .sk-buybox { max-width: 100%; padding: 18px; box-sizing: border-box; }
   .sk-price b { font-size: 46px; }
   .sk-chat-body { padding: 18px 14px 4px; gap: 14px; }
@@ -1052,7 +1052,7 @@ body.sk-page {
 .sk-kit-card:nth-child(3) .sk-kit-badge { background: #faf5ff; color: #7e22ce; }
 
 .sk-kit-title {
-  font: 700 22px/1.25 var(--sans);
+  font: 500 22px/1.25 var(--sans);
   color: var(--ink);
   letter-spacing: -0.01em;
   margin: 0 0 12px;
@@ -1159,7 +1159,7 @@ body.sk-page {
   margin-bottom: 12px;
 }
 .sk-agents-banner h3 {
-  font: 700 22px/1.25 var(--sans);
+  font: 500 22px/1.25 var(--sans);
   margin: 0 0 8px;
   color: #fff;
 }
@@ -1228,7 +1228,7 @@ body.sk-page {
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .sk-team-grid li:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
-.sk-team-grid b { font: 700 16px/1.25 var(--sans); color: var(--ink); }
+.sk-team-grid b { font: 500 16px/1.25 var(--sans); color: var(--ink); }
 .sk-team-grid span { font: 400 13.5px/1.45 var(--sans); color: var(--ink-2); }
 @media (max-width: 1000px) {
   .sk-reels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
