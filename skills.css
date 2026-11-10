@@ -144,7 +144,7 @@ body.sk-page {
   color: rgb(255 255 255 / 0.74);
 }
 .sk-h1 {
-  max-width: 25ch;
+  max-width: 30ch;
   margin: 0;
   font: 700 clamp(32px, 3.2vw, 44px)/1.18 var(--sans);
   letter-spacing: -0.02em;
