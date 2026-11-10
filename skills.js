@@ -1,115 +1,45 @@
 /* ===========================================================================
-   skills.js   skills.opusjake.ai: prices, countdown, checkout links, buy bar
-
-   Reads /offer.json, the same config the /r/ pop-up (offer.js) uses, so the
-   price, the real deadline and the Stripe Payment Links stay in one
-   place. Until the deadline every Buy link is the launch link; after it, the
-   afterDeadline link and price. The HTML ships the launch values, so the page
-   still sells if this file or the fetch fails.
-
-   Tracking matches offer.js: a cookieless POST to /api/public/offer-event,
-   "open" once per page load (detail "landing") and "checkout" per press
-   (detail = which button). Checkout links carry client_reference_id
-   r_skills-landing, so the portal funnel puts views, clicks and sales from
-   this page on one row ("skills-landing").
+   skills.js — Коллекция 60+ экспертных навыков для Claude Code
+   Автор: Ернур Абайлдаев (Botflow)
+   Telegram: @ernur_dev / https://t.me/ernur_dev
    =========================================================================== */
 (function () {
   'use strict';
 
-  var SLUG = 'skills-landing';
-  var VARIANT = 'lp-v1';
-  var REF = 'r_' + SLUG;
-  var SKILLS = 500;
-
-  var o = {
-    id: 'skill-setup-v1',
-    price: 29,
-    compareAt: 49,
-    deadline: '2026-11-16T23:59:00-05:00',
-    checkoutUrl: 'https://buy.stripe.com/bJe5kE7Ac3fB8VQfwy3VC0d',
-    afterDeadline: { price: 49, checkoutUrl: 'https://buy.stripe.com/fZu3cwg6IbM71to5VY3VC0e' }
-  };
-
-  var landed = Date.now();
-  var VIEW = Math.random().toString(36).slice(2, 12);
-  var REPORT = !navigator.webdriver && !/^(localhost|127\.0\.0\.1|\[::1\])$|\.localhost$|\.local$|\.test$|^10\.|^192\.168\.|^172\.(1[6-9]|2\d|3[01])\./.test(location.hostname);
+  var TG_URL = 'https://t.me/ernur_dev';
+  var SKILLS = 66;
 
   function $all(sel) { return [].slice.call(document.querySelectorAll(sel)); }
-  function end() { return new Date(o.deadline).getTime(); }
-  function live() { return !isNaN(end()) && Date.now() < end(); }
-  function price() { return live() ? o.price : (o.afterDeadline && o.afterDeadline.price) || o.price; }
-  function money(n) { return '$' + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(n)); }
-  function pad(n) { return n < 10 ? '0' + n : String(n); }
-
-  function checkoutUrl() {
-    var base = live() ? o.checkoutUrl : (o.afterDeadline && o.afterDeadline.checkoutUrl) || o.checkoutUrl;
-    try {
-      var u = new URL(base, location.href);
-      u.searchParams.set('client_reference_id', REF);
-      return u.toString();
-    } catch (e) { return base; }
-  }
-
-  function deadlineLong() {
-    try {
-      var d = new Date(o.deadline);
-      var months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-      return d.getDate() + ' ' + months[d.getMonth()] + ' в 23:59 ET';
-    } catch (e) { return o.deadlineShort || ''; }
-  }
 
   function paint() {
-    var p = price(), on = live();
-    var after = (o.afterDeadline && o.afterDeadline.price) || o.compareAt;
-    $all('[data-price]').forEach(function (el) { el.textContent = money(p); });
-    $all('[data-price-cents]').forEach(function (el) { el.textContent = '$' + p.toFixed(2); });
-    $all('[data-after]').forEach(function (el) { el.textContent = money(after); });
+    $all('[data-price]').forEach(function (el) { el.textContent = '0 ₸'; });
+    $all('[data-price-free]').forEach(function (el) { el.textContent = 'Бесплатно'; });
+    $all('[data-price-cents]').forEach(function (el) { el.textContent = '0 ₸'; });
+    $all('[data-after]').forEach(function (el) { el.textContent = '$49'; });
     $all('[data-compare]').forEach(function (el) {
-      var show = on && o.compareAt > p;
-      el.textContent = show ? money(o.compareAt) : '';
-      el.hidden = !show;
+      el.textContent = '$49';
+      el.hidden = false;
     });
-    // under $100 a percentage reads bigger than the dollar amount (40% off vs Save $20)
     $all('[data-save]').forEach(function (el) {
-      var show = on && o.compareAt > p;
-      el.textContent = !show ? '' : o.compareAt < 100 ? 'Скидка ' + Math.floor((o.compareAt - p) / o.compareAt * 100) + '%' : 'Экономия ' + money(o.compareAt - p);
-      el.hidden = !show;
+      el.textContent = '100% Free';
+      el.hidden = false;
     });
-    $all('[data-per-skill]').forEach(function (el) { el.textContent = 'Меньше ' + Math.ceil(p / SKILLS * 100) + '¢ за навык'; });
-    $all('[data-deadline-long]').forEach(function (el) { el.textContent = deadlineLong(); });
-    $all('[data-live-only]').forEach(function (el) { el.hidden = !on; });
-    $all('[data-ended-only]').forEach(function (el) { el.hidden = on; });
-    var href = checkoutUrl();
-    $all('a[data-buy]').forEach(function (a) { a.href = href; });
-  }
-
-  var wasLive = null;
-  function tick() {
-    var on = live();
-    if (on !== wasLive) { wasLive = on; paint(); }
-    if (!on) return;
-    var s = Math.max(0, Math.floor((end() - Date.now()) / 1000));
-    var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
-    $all('[data-clock]').forEach(function (c) {
-      var u = c.querySelectorAll('[data-u]');
-      for (var i = 0; i < u.length; i++) {
-        var k = u[i].getAttribute('data-u');
-        u[i].textContent = k === 'd' ? String(d) : pad(k === 'h' ? h : k === 'm' ? m : sec);
-      }
+    $all('[data-per-skill]').forEach(function (el) {
+      el.textContent = '100% бесплатно · Open Source';
     });
-    var short = d > 0 ? d + 'д ' + pad(h) + 'ч ' + pad(m) + 'м' : pad(h) + ':' + pad(m) + ':' + pad(sec);
-    $all('[data-clock-short]').forEach(function (el) { el.textContent = short; });
+    $all('[data-deadline-long]').forEach(function (el) {
+      el.textContent = 'Открытый доступ';
+    });
+    $all('[data-live-only]').forEach(function (el) { el.hidden = false; });
+    $all('[data-ended-only]').forEach(function (el) { el.hidden = true; });
+
+    $all('a[data-buy]').forEach(function (a) {
+      a.href = TG_URL;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
   }
 
-  function track(name, detail) {
-    if (!REPORT) return;
-    var body = { offer: o.id, variant: VARIANT, event: name, detail: detail || '', slug: SLUG, view: VIEW, ms: Date.now() - landed, referrer: (document.referrer || '').slice(0, 2000) };
-    try {
-      fetch('/api/public/offer-event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true, credentials: 'omit' }).catch(function () {});
-    } catch (e) {}
-  }
-
-  // the buy bar: on phones, once the hero's button is off screen and before the closing band
   function stickyBar() {
     var bar = document.querySelector('[data-sticky]');
     var hero = document.querySelector('[data-buy="hero"]');
@@ -132,33 +62,23 @@
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[data-buy]');
     if (!a) return;
-    a.href = checkoutUrl();
-    track('checkout', a.getAttribute('data-buy'));
+    a.href = TG_URL;
   });
 
   function boot() {
     paint();
-    tick();
-    setInterval(tick, 1000);
     stickyBar();
-    track('open', 'landing');
   }
 
-  fetch('./offer.json', { cache: 'no-store', credentials: 'omit' })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (cfg) { if (cfg && cfg.checkoutUrl && cfg.price) o = cfg; })
-    .catch(function () {})
-    .then(boot);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();
 
 /* ===========================================================================
-   The moving parts: the hero chat that plays the install and then one job,
-   the pick-a-job demo, the wall of all 500 names, the counters.
-
-   Timing runs on setTimeout, never requestAnimationFrame or observers alone:
-   a hidden tab runs neither, and the page must still end up drawn. Every
-   piece starts from finished HTML, so a failed script leaves a full page.
-   Reduced motion: no playback, no drift, no counting.
+   Интерактивные демонстрации:
+   - Терминал Claude в Hero
+   - Переключатель сценариев (Tabs)
+   - Сетка всех 66 навыков с фильтрами по категориям
    =========================================================================== */
 (function () {
   'use strict';
@@ -167,66 +87,62 @@
   var STOP = {};
   var AV = '<img class="sk-chat-av" src="./brand-icons/claude.png" alt="" width="24" height="24">';
 
-  // example jobs; skill and pack names are real entries in the vault
   var JOBS = {
-    ig: {
-      prompt: 'Напиши 5 хуков для рилса о моей кофейне',
-      skill: 'ig-reel', pack: 'Контент',
+    anim: {
+      prompt: 'Сделай 3D маршрут для Reels: Алматы — Бали, 8 200 км',
+      skill: 'map-route', pack: 'Монтаж и Анимация',
       reply: [
-        'Вот 5 хуков, от самого сильного:',
-        '1. Мы берём $7 за этот латте. Вот куда уходит каждый доллар.',
-        '2. Напиток, который наши бариста отказываются готовить после 14:00.',
-        '3. Как выглядят 400 чашек в день по ту сторону стойки.',
-        '4. Перестаньте заказывать это в любой кофейне.',
-        '5. Наш наименее продаваемый напиток — тот, которым мы гордимся больше всего.',
-        'Составить раскадровку для варианта #1?'
-      ]
-    },
-    email: {
-      prompt: 'Напиши холодное письмо владельцу спортзала о моём приложении для записи',
-      skill: 'cold-email', pack: 'Продажи',
-      reply: [
-        'Тема: 11 пропусков занятий за прошлую неделю?',
-        'Привет, Сэм!',
-        'Залы вашего формата теряют от 8 до 12 мест в неделю из-за неявок. Наше приложение отправляет SMS за два часа до тренировки и заполняет свободные места из листа ожидания.',
-        'Уделите 10 минут в четверг, чтобы взглянуть?',
-        'Я также подготовил цепочку фоллоу-апов на 3-й и 7-й дни.'
+        'Инициализирую сцену Three.js с 3D-глобусом и рельефом местности.',
+        '1. Траектория полета: камера динамически летит по дуге Алматы → Бали.',
+        '2. Одометр: анимированный счетчик километров с ускорением от 0 до 8 200 км.',
+        '3. Пин геолокации и карточка направления в безопасной зоне Instagram Reels.',
+        '4. Рендер MP4 завершен (1080x1920, 60fps). Экспортировать в проект?'
       ]
     },
     yt: {
-      prompt: 'Напиши сценарий для 60-секундного YouTube Short про мой хлеб на закваске',
-      skill: 'yt-script', pack: 'Контент',
+      prompt: 'Напиши сценарий Shorts: 3 AI-инструмента, которые заменят видеомонтажера',
+      skill: 'yt-script', pack: 'YouTube и Контент',
       reply: [
-        'Хук (0–3 сек): Твой хлеб плоский из-за одного шага, который ты пропускаешь.',
-        '0:03 Плоская буханка рядом с пышной. Та же мука, та же печь.',
-        '0:15 Секрет: холодная расстойка на ночь. Тесто идёт в холодильник.',
-        '0:40 Утренняя выпечка. Надрез, пористый мякиш, хрустящая корка.',
-        '0:55 Напиши «ХЛЕБ» в комментариях — и я пришлю полный рецепт.'
+        'Оценка хука: 9.4/10 · Прогноз удержания: 82%+',
+        '0:00–0:03 [Хук]: Монтажеры берут $50 за ролик, который этот софт собирает за 12 секунд.',
+        '0:03–0:18 [Инструмент 1]: HyperFrames — генерирует динамичную графику прямо из кода.',
+        '0:18–0:35 [Инструмент 2]: Whisper + CutCurve — вырезает паузы и тишину в один клик.',
+        '0:35–0:50 [Инструмент 3]: Zach-D-Films — трехмерные персонажи под вашу озвучку.',
+        '0:50–0:58 [Призыв]: Напиши «МОНТАЖ» в комменты — пришлю ссылки на инструменты.'
       ]
     },
-    li: {
-      prompt: 'Сделай пост для соцсетей: мы только что набрали 1 000 клиентов',
-      skill: 'li-post', pack: 'Контент',
+    sales: {
+      prompt: 'Клиент на созвоне говорит: "У вас дорого, в другом месте сделают за 50 000 ₸". Как ответить?',
+      skill: 'sales-coach', pack: 'Продажи и B2B',
       reply: [
-        '1 000 клиентов.',
-        '18 месяцев назад их было 3, и один из них — моя мама.',
-        'Что реально сдвинуло цифру:',
-        '→ Мы отвечали на каждое письмо поддержки меньше чем за час.',
-        '→ Мы убрали 2 функции, которыми никто не пользовался.',
-        '→ Мы попросили каждого клиента об одной рекомендации.',
-        'Никакой рекламы. Никакого шума. Только системная работа.'
+        'Режим живого ассистента · Перехват инициативы:',
+        '1. Присоединение: «Понимаю вас, разница в цене действительно ощутима».',
+        '2. Вскрытие ценности: «Подскажите, за 50 000 ₸ они гарантируют интеграцию с CRM и техподдержку 24/7, или это голый шаблон?»',
+        '3. Перевод на риски: «Обычно дешевые решения ломаются через месяц, и бизнес теряет лидов на миллионы. Мы делаем решение под ключ с гарантией окупаемости».',
+        '4. Закрытие: «Показать кейс, где клиент сначала выбрал дешевый вариант, а потом пришел переделывать к нам?»'
       ]
     },
-    shop: {
-      prompt: 'Настрой магазин свечей ручной работы',
-      skill: 'shopify-expert', pack: 'Разработка',
+    social: {
+      prompt: 'Очеловечь этот черновик поста для блога и убери нейросетевой мусор',
+      skill: 'ig-human', pack: 'Instagram и Соцсети',
       reply: [
-        'Вот план запуска по шагам:',
-        '1. Витрина: фокус на подбор ароматов прямо с главной страницы.',
-        '2. Карточки: один товар на аромат, объём как вариация, время горения в описании.',
-        '3. Оплата: быстрая оплата картой в один клик, бесплатная доставка от $50.',
-        '4. Запуск: приветственная цепочка из 3 писем для базы подписчиков.',
-        'Написать тексты для описания товаров?'
+        'Анализ черновика: удалены 6 тире, штампы «в эпоху цифровизации» и канцелярит.',
+        'Итоговый живой вариант:',
+        '«Мы потратили 4 недели на запуск бота и получили ровно 0 заказов.',
+        'Оказалось, людям не нужна была сложная воронка. Им нужна была одна кнопка: узнать цену и записаться.',
+        'Как только мы оставили два простых экрана — конверсия выросла в 4 раза за первые выходные.',
+        'Мораль: простота продает лучше любых сложных схем.»'
+      ]
+    },
+    recut: {
+      prompt: 'Наложи B-roll и всплывающую графику на подкаст спикера по транскрипту',
+      skill: 'talking-head-recut', pack: 'Монтаж и Анимация',
+      reply: [
+        'Анализ дорожки спикера (хронометраж 36 сек):',
+        '[0:04] Спикер говорит о «росте выручки x3» → всплывающий 3D-график роста.',
+        '[0:15] Фраза «нейросети для бизнеса» → футаж серверной + саунд-эффект Whoosh.',
+        '[0:25] Главный инсайт → динамический наезд камеры (Punch-in 1.15x) на спикера.',
+        'Звук: фоновый трек приглушен под голос на -18dB (авто-дакинг). Файл скомпонован!'
       ]
     }
   };
@@ -234,20 +150,18 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function near(el, frac) { var r = el.getBoundingClientRect(); return r.top < innerHeight * (frac || 0.85) && r.bottom > 0; }
 
-  // one Claude window that can type, send and answer
   function Chat(fig) {
     var body = fig.querySelector('[data-chat-body]');
     var compose = fig.querySelector('[data-compose]');
     var sendBtn = fig.querySelector('.sk-chat-compose b');
-    var hint = compose.textContent;
+    var hint = compose ? compose.textContent : '';
     var token = 0;
 
-    // every tick also keeps the newest line in view, as the real app does
     function wait(ms, t) {
       return new Promise(function (ok, no) {
         setTimeout(function () {
           if (t !== token) return no(STOP);
-          body.scrollTop = body.scrollHeight;
+          if (body) body.scrollTop = body.scrollHeight;
           ok();
         }, ms);
       });
@@ -263,23 +177,27 @@
     return {
       body: body,
       start: function () { token++; return token; },
-      stop: function () { token++; compose.classList.remove('is-typed'); compose.textContent = hint; },
+      stop: function () { token++; if (compose) { compose.classList.remove('is-typed'); compose.textContent = hint; } },
       wait: wait,
       clear: function (t, fade) {
+        if (!body) return Promise.resolve();
         if (!fade) { body.innerHTML = ''; return Promise.resolve(); }
         body.classList.add('is-clearing');
         return wait(280, t).then(function () { body.innerHTML = ''; body.classList.remove('is-clearing'); });
       },
       type: async function (text, t, fast) {
+        if (!compose) return;
         compose.classList.add('is-typed');
         for (var i = 1; i <= text.length; i++) {
           compose.textContent = text.slice(0, i);
           await wait((fast ? 14 : 22) + Math.random() * (fast ? 16 : 30), t);
         }
         await wait(260, t);
-        sendBtn.classList.add('is-press');
-        await wait(130, t);
-        sendBtn.classList.remove('is-press');
+        if (sendBtn) {
+          sendBtn.classList.add('is-press');
+          await wait(130, t);
+          sendBtn.classList.remove('is-press');
+        }
         compose.classList.remove('is-typed');
         compose.textContent = hint;
         add(body, 'p', 'sk-chat-me', esc(text));
@@ -297,7 +215,6 @@
         }
         return p;
       },
-      // a trail line: spinner + busy label, then a check (or the skill spark) + done label
       tool: async function (parent, busy, done, ms, t, opts) {
         opts = opts || {};
         var p = add(parent, 'p', 'sk-chat-tool is-busy', '<i></i><span>' + busy + '</span>');
@@ -305,7 +222,7 @@
         if (opts.count) {
           var steps = 14;
           for (var k = 1; k <= steps; k++) {
-            label.textContent = busy + ' (' + Math.round(opts.count * k / steps) + ' of ' + opts.count + ')';
+            label.textContent = busy + ' (' + Math.round(opts.count * k / steps) + ' из ' + opts.count + ')';
             await wait(ms / steps, t);
           }
         } else {
@@ -335,39 +252,43 @@
     };
   }
 
-  function skillLine(job) { return 'Использую навык <b>' + esc(job.skill) + '</b> · пак «' + esc(job.pack) + '»'; }
+  function skillLine(job) { return 'Использую навык <b>' + esc(job.skill) + '</b> · категория «' + esc(job.pack) + '»'; }
 
-  // --- hero: the real install, then one job; loops through three jobs -------
   function hero() {
     var fig = document.querySelector('[data-hero-chat]');
     if (!fig) return;
     var c = Chat(fig);
     c.body.classList.add('is-live');
     if (REDUCED) return;
-    var order = ['ig', 'email', 'yt'];
+    var order = ['anim', 'yt', 'sales'];
     var n = 0;
     async function cycle(t, first) {
       var job = JOBS[order[n++ % order.length]];
       await c.clear(t, !first);
       await c.wait(first ? 350 : 500, t);
-      await c.type('Install skills from opusjake.ai/i/OJ-7F3K-92QD', t);
+      await c.type('git clone https://github.com/Abaildaev/claude-500-skills.git ~/.claude/skills/', t);
       await c.wait(450, t);
       var a = c.turn();
-      await c.say(a, "Это ваш персональный набор навыков. Начинаю установку.", t);
-      await c.tool(a, 'Открываю ссылку для установки', 'Ссылка открыта', 800, t);
-      await c.tool(a, 'Устанавливаю навыки', 'Установлено 500 навыков', 1300, t, { count: 500 });
+      await c.say(a, "Это коллекция 60+ экспертных навыков Claude от Ернура Абайлдаева (Botflow). Начинаю установку.", t);
+      await c.tool(a, 'Клонирую открытый репозиторий', 'Репозиторий подключен', 700, t);
+      await c.tool(a, 'Устанавливаю навыки', 'Установлено 66 навыков', 1200, t, { count: 66 });
       await c.wait(300, t);
-      var opts = c.ask(a, 'Какие паки включить?', [['Контент', '71 навык'], ['Продажи', '36 навыков'], ['Видео', '48 навыков'], ['Дизайн', '45 навыков']]);
-      for (var i = 0; i < 3; i++) { await c.wait(420, t); opts[i].classList.add('is-on'); }
+      var opts = c.ask(a, 'Какие категории активировать?', [
+        ['Монтаж и Анимация', '15 навыков'],
+        ['YouTube и Контент', '12 навыков'],
+        ['Продажи и B2B', '15 навыков'],
+        ['Instagram и Соцсети', '13 навыков']
+      ]);
+      for (var i = 0; i < 4; i++) { await c.wait(380, t); opts[i].classList.add('is-on'); }
       await c.wait(500, t);
-      await c.say(a, 'Готово. Контент, Продажи и Видео включены.', t);
-      await c.wait(1000, t);
+      await c.say(a, 'Готово. Все категории активны. Запускаю задачу...', t);
+      await c.wait(900, t);
       await c.type(job.prompt, t);
       await c.wait(400, t);
       var b = c.turn();
-      await c.tool(b, 'Подбираю навык', skillLine(job), 700, t, { skill: true });
+      await c.tool(b, 'Подбираю регламент', skillLine(job), 650, t, { skill: true });
       await c.lines(b, job.reply, t);
-      await c.wait(4500, t);
+      await c.wait(4800, t);
     }
     var t = c.start();
     (async function loop(first) {
@@ -375,7 +296,6 @@
     })(true);
   }
 
-  // --- demo: tabs pick the job; cycles by itself until someone picks ---------
   function demo() {
     var fig = document.querySelector('[data-demo-chat]');
     var list = document.querySelector('.sk-jobs');
@@ -386,25 +306,24 @@
     var auto = !REDUCED, timer = 0, current = 0, started = false;
     list.style.setProperty('--auto-ms', AUTO + 'ms');
     c.body.classList.add('is-live');
-    // below the fold at load: start empty, so the first job types in on arrival
     if (!REDUCED && !near(fig, 0.8)) c.body.innerHTML = '';
 
     function select(i) {
       current = i;
       tabs.forEach(function (b, k) { b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
-      // restart the progress line on the newly selected tab
       list.classList.remove('is-auto');
       void list.offsetWidth;
       if (auto) list.classList.toggle('is-auto', true);
     }
     async function show(i, t) {
       var job = JOBS[tabs[i].getAttribute('data-job')];
+      if (!job) return;
       await c.clear(t, true);
       await c.wait(150, t);
       await c.type(job.prompt, t, true);
       await c.wait(300, t);
       var a = c.turn();
-      await c.tool(a, 'Подбираю навык', skillLine(job), 600, t, { skill: true });
+      await c.tool(a, 'Подбираю регламент', skillLine(job), 600, t, { skill: true });
       await c.lines(a, job.reply, t, 12);
     }
     function play(i) {
@@ -417,7 +336,6 @@
     tabs.forEach(function (b, i) {
       b.addEventListener('click', function () { auto = false; list.classList.remove('is-auto'); clearTimeout(timer); started = true; play(i); });
     });
-    // arrow keys move between tabs, like any tab list
     list.addEventListener('keydown', function (e) {
       var d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
       if (!d) return;
@@ -427,7 +345,6 @@
       tabs[i].click();
     });
     if (REDUCED) return;
-    // the first job types itself once the window is on screen
     function check() {
       if (started || !near(fig, 0.8)) return;
       started = true;
@@ -438,7 +355,6 @@
     check();
   }
 
-  // --- the wall: drifting rows of all 500, or one pack laid out --------------
   function wall() {
     var rows = document.querySelector('[data-rows]');
     var gridWrap = document.querySelector('[data-grid-wrap]');
@@ -465,8 +381,7 @@
         if (pack === 'all') { gridWrap.hidden = true; rows.hidden = false; return; }
         var mine = pills.filter(function (p) { return p.getAttribute('data-p') === pack; });
         mine.sort(function (a, b) {
-          var ja = a.classList.contains('is-jake'), jb = b.classList.contains('is-jake');
-          return ja === jb ? a.textContent.localeCompare(b.textContent) : ja ? -1 : 1;
+          return a.textContent.localeCompare(b.textContent);
         });
         grid.innerHTML = '';
         mine.forEach(function (p, k) {
@@ -474,19 +389,17 @@
           c.style.setProperty('--k', Math.min(k, 60));
           grid.appendChild(c);
         });
-        var jake = +tab.getAttribute('data-jake') || 0;
-        cap.innerHTML = '<b>' + mine.length + ' навыков</b> в паке «' + esc(tab.getAttribute('data-name')) + '»' + (jake ? ' · ' + jake + ' авторских' : '');
+        cap.innerHTML = '<b>' + mine.length + ' навыков</b> в категории «' + esc(tab.getAttribute('data-name')) + '» · 100% Open Source';
         rows.hidden = true;
         gridWrap.hidden = false;
       });
     });
   }
 
-  // --- counters tick up the first time they come on screen -------------------
   function counters() {
     var els = [].slice.call(document.querySelectorAll('[data-count]'));
     if (REDUCED || !els.length) return;
-    function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
+    function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
     els.forEach(function (el) {
       var to = +el.getAttribute('data-count'), suf = el.getAttribute('data-suffix') || '';
       var done = false;
