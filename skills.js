@@ -30,7 +30,7 @@
       el.hidden = false;
     });
     $all('[data-per-skill]').forEach(function (el) {
-      el.textContent = '100% бесплатно · Open Source';
+      el.textContent = '100% бесплатно · 1 универсальный .zip';
     });
     $all('[data-deadline-long]').forEach(function (el) {
       el.textContent = 'Открытый доступ';
