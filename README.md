@@ -1,23 +1,20 @@
-# 60+ экспертных навыков для Claude Code
+# 86 навыков и нейроагентов для Claude (Botflow)
 
-Коллекция из 60+ отборных открытых навыков для Claude Code, сгруппированных по 5 ключевым направлениям:
-1. **🎬 Монтаж видео и 3D-анимация** (Three.js, 3D маршруты на карте, эксплейнеры в стиле Zach D Films, стикмены, взрыв-схемы, Talking-Head рекут, авто-саунддизайн HyperFrames)
-2. **📈 YouTube & Shorts** (сценарии по 21 формуле хуков, парный линтер заголовок+обложка, поиск аномальных вирусных тем, парсинг удержания аудитории, автонарезка Shorts)
-3. **💼 B2B Продажи и закрытие сделок** (онлайн-тренер на созвоне sales-coach, охота на B2B-клиентов whale-hunter, отработка возражения «дорого», генератор КП и дожимы)
-4. **📱 Instagram, Reels & Очеловечивание** (вирусные рилсы, экспертные карусели, хуманизатор без ChatGPT-клише, скрипты воронки в Direct)
-5. **💰 Аналитика и Трейдинг** (дейтрейдинг, сканер графиков, объемный анализ, калькулятор рисков)
+Лендинг и каталог единого пакета навыков для Claude Code и Claude Desktop от [Ернура Абайлдаева](https://t.me/ernur_dev).
 
-## 🚀 Установка за 1 команду
-Вставьте в терминал Claude Code:
-```bash
-git clone https://github.com/Abaildaev/claude-500-skills.git ~/.claude/skills/
-```
+## Что входит в пакет
 
-## 🌐 Онлайн-лендинг и демо
-👉 **[https://abaildaev.github.io/claude-500-skills/](https://abaildaev.github.io/claude-500-skills/)**
+- **19 навыков видео и 3D-анимации** (`zach-d-films`, `map-route`, `minimalistic-graphics`, `breakdown`, `graph`, `stick-figure`, 13 модулей HyperFrames + `kit/`)
+- **11 навыков YouTube** (`yt-script`, `yt-package`, `yt-retention`, `yt-shorts`, ...)
+- **13 навыков Instagram и Reels** (`ig-reel`, `ig-human`, `ig-carousel`, ...)
+- **22 навыка B2B-продаж и офферов** (`offer-builder`, `sales-coach`, `whale-hunter`, `proposal-writer`, ...)
+- **11 навыков трейдинга SMC** (`trader-analyst`, `trader-entry`, ...) + 24-стр. PDF на русском
+- **10 русских нейроагентов** (`/автоматизатор`, `/ассистент`, `/дизайнер`, `/копирайтер`, `/маркетолог`, `/монтажер`, `/продажник`, `/ресерчер`, `/сценарист`, `/техспец`)
 
-## 👤 Автор и контакты
-- **Ернур Абайлдаев** · Основатель **Botflow**
-- **Telegram-канал**: [@ernur_dev](https://t.me/ernur_dev)
-- **Личный контакт / Диагностика**: [@abaildaev](https://t.me/abaildaev)
-- **Лицензия**: MIT (100% Free & Open Source)
+## Как забрать
+
+Единый архив `claude-skills-botflow.zip` и персональная 1-строчная команда установки выдаются через Telegram-бота **[@ernurdev_bot](https://t.me/ernurdev_bot?start=skills)** после подписки на канал **[@ernur_dev](https://t.me/ernur_dev)**.
+
+- Каталог (GitHub Pages): https://abaildaev.github.io/claude-skills/
+- Зеркало на Botflow: https://botflow.asia/skills/
+- Диагностика и разработка под ключ: [@abaildaev](https://t.me/abaildaev)

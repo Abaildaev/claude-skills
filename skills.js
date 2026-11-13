@@ -8,8 +8,11 @@
   'use strict';
 
   var BOT_URL = 'https://t.me/ernurdev_bot?start=skills';
-  var TG_CHANNEL = 'https://t.me/ernur_dev';
-  var SKILLS = 66;
+  var SKILLS = 86;
+
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
 
   function $all(sel) { return [].slice.call(document.querySelectorAll(sel)); }
 
@@ -35,11 +38,9 @@
     $all('[data-live-only]').forEach(function (el) { el.hidden = false; });
     $all('[data-ended-only]').forEach(function (el) { el.hidden = true; });
 
-    // Buttons that open the Telegram bot directly
-    $all('a[data-bot]').forEach(function (a) {
-      if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
-        a.href = BOT_URL;
-      }
+    // All primary CTAs funnel into Telegram bot
+    $all('a[data-bot], a[data-buy]').forEach(function (a) {
+      a.href = BOT_URL;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
     });
@@ -48,7 +49,7 @@
   function stickyBar() {
     var bar = document.querySelector('[data-sticky]');
     var hero = document.querySelector('[data-buy="hero"]');
-    var offer = document.querySelector('#offer');
+    var close = document.querySelector('.sk-close');
     var stickyBtn = bar ? bar.querySelector('.rs-btn') : null;
     if (!bar || !hero) return;
     bar.hidden = false;
@@ -56,25 +57,17 @@
     function update() {
       var vh = window.innerHeight;
       var pastHero = hero.getBoundingClientRect().bottom < 0;
-      var pastOffer = offer && offer.getBoundingClientRect().top < vh * 0.5;
-      
-      if (pastHero !== on) {
-        on = pastHero;
+      var atClose = close && close.getBoundingClientRect().top < vh * 0.9;
+      var want = pastHero && !atClose;
+      if (want !== on) {
+        on = want;
         bar.classList.toggle('is-on', on);
       }
-
       if (stickyBtn) {
-        if (pastOffer) {
-          stickyBtn.href = BOT_URL;
-          stickyBtn.target = '_blank';
-          stickyBtn.rel = 'noopener noreferrer';
-          stickyBtn.textContent = 'Забрать в @ernurdev_bot ↗';
-        } else {
-          stickyBtn.href = '#kits';
-          stickyBtn.removeAttribute('target');
-          stickyBtn.removeAttribute('rel');
-          stickyBtn.textContent = 'Выбрать комплект ↓';
-        }
+        stickyBtn.href = BOT_URL;
+        stickyBtn.target = '_blank';
+        stickyBtn.rel = 'noopener noreferrer';
+        stickyBtn.textContent = 'Забрать ' + SKILLS + ' навыков ↗';
       }
     }
     window.addEventListener('scroll', update, { passive: true });
@@ -83,6 +76,9 @@
   }
 
   function boot() {
+    if (!location.hash) {
+      window.scrollTo(0, 0);
+    }
     paint();
     stickyBar();
 
@@ -130,11 +126,11 @@
     },
     trader: {
       prompt: 'Проанализируй сетап BTC/USDT 15m: есть ли снятие ликвидности и валидный ордерблок?',
-      skill: 'smc-hunter', pack: 'Трейдинг и Аналитика',
+      skill: 'trader-analyst', pack: 'Трейдинг',
       reply: [
         'Сканирование SMC-структуры (M15 / H1):',
         '1. Снятие ликвидности: азиатский хай (BSL) пробит импульсной тенью свипа.',
-        '2. Слом структуры: подтвержден сдвиг MSS / CHoCH на 68 450$ с заломом тела свичи.',
+        '2. Слом структуры: подтвержден сдвиг MSS / CHoCH на 68 450$ с закрытием свечи.',
         '3. Зона интереса (POI): сформирован 15m медвежий ордерблок + незакрытый Imbalance (FVG).',
         '4. Риск-менеджмент: вход 68 320$, SL 68 580$ (260п), TP 67 400$ (920п). Соотношение R:R = 1:3.5.',
         'Симуляция Монте-Карло: математическое ожидание сетапа +1.84R при винрейте 52%.'
@@ -307,18 +303,18 @@
       var job = JOBS[order[n++ % order.length]];
       await c.clear(t, !first);
       await c.wait(first ? 350 : 500, t);
-      await c.type('Установи пакет навыков Ернура Абайлдаева', t);
+      await c.type('bash claude-skills-botflow/install.sh', t);
       await c.wait(450, t);
       var a = c.turn();
-      await c.say(a, "Это коллекция 60+ экспертных навыков Claude от Ернура Абайлдаева (Botflow). Начинаю установку.", t);
-      await c.tool(a, 'Подключаю пакет навыков', 'Пакет подключен', 700, t);
-      await c.tool(a, 'Устанавливаю навыки', 'Установлено 66 навыков', 1200, t, { count: 66 });
+      await c.say(a, 'Распаковываю единый архив claude-skills-botflow.zip от Ернура Абайлдаева. Подключаю 86 навыков.', t);
+      await c.tool(a, 'Распаковываю архив', 'Архив claude-skills-botflow.zip подключён', 700, t);
+      await c.tool(a, 'Устанавливаю навыки', 'Установлено 86 навыков и нейроагентов', 1100, t, { count: 86 });
       await c.wait(300, t);
-      var opts = c.ask(a, 'Какие категории активировать?', [
-        ['Монтаж и Анимация', '15 навыков'],
-        ['YouTube и Контент', '12 навыков'],
-        ['Продажи и B2B', '15 навыков'],
-        ['Instagram и Соцсети', '13 навыков']
+      var opts = c.ask(a, 'Какие направления активировать?', [
+        ['Видео и 3D-анимация', '19 навыков'],
+        ['YouTube и Instagram', '24 навыка'],
+        ['B2B продажи и Трейдинг', '33 навыка'],
+        ['10 русских нейроагентов', '10 ролей']
       ]);
       for (var i = 0; i < 4; i++) { await c.wait(380, t); opts[i].classList.add('is-on'); }
       await c.wait(500, t);
@@ -430,7 +426,9 @@
           c.style.setProperty('--k', Math.min(k, 60));
           grid.appendChild(c);
         });
-        cap.innerHTML = '<b>' + mine.length + ' навыков</b> в категории «' + esc(tab.getAttribute('data-name')) + '» · 100% Open Source';
+        var mod10 = mine.length % 10, mod100 = mine.length % 100;
+        var word = (mod100 >= 11 && mod100 <= 19) ? 'навыков' : (mod10 === 1 ? 'навык' : (mod10 >= 2 && mod10 <= 4 ? 'навыка' : 'навыков'));
+        cap.innerHTML = '<b>' + mine.length + ' ' + word + '</b> в категории «' + esc(tab.getAttribute('data-name')) + '» · в едином .zip';
         rows.hidden = true;
         gridWrap.hidden = false;
       });
